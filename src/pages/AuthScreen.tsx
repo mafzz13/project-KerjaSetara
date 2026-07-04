@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Eye, EyeOff, Briefcase, Building2, Loader2, AlertCircle, ChevronLeft, Mic, MicOff, Fingerprint, Volume2, VolumeX } from 'lucide-react';
+import { Eye, EyeOff, Briefcase, Building2, Loader2, AlertCircle, ChevronLeft, Mic, Volume2, VolumeX } from 'lucide-react';
 import Logo from '../components/Logo';
 import { useAuth } from '../contexts/AuthContext';
 import { useAccessibility } from '../contexts/AccessibilityContext';
@@ -15,7 +15,6 @@ type Role = 'job_seeker' | 'employer';
 const voiceSteps = [
   'Selamat datang di Kerja Setara.',
   'Silakan masukkan email dan password kamu.',
-  'Atau gunakan sidik jari untuk masuk lebih cepat.',
 ];
 
 function SignLanguageAvatar({ speaking }: { speaking: boolean }) {
@@ -41,9 +40,6 @@ export default function AuthScreen({ onSuccess, onBack }: AuthScreenProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [voiceIdx, setVoiceIdx] = useState(0);
-  const [biometricLoading, setBiometricLoading] = useState(false);
-  const [biometricSuccess, setBiometricSuccess] = useState(false);
-  const [voiceListening, setVoiceListening] = useState(false);
 
   const [form, setForm] = useState({
     email: '', password: '', fullName: '',
@@ -94,33 +90,6 @@ export default function AuthScreen({ onSuccess, onBack }: AuthScreenProps) {
     }
   };
 
-  const handleBiometric = () => {
-    setBiometricLoading(true);
-    speak('Memverifikasi identitas biometrik...');
-    setTimeout(() => {
-      setBiometricLoading(false);
-      setBiometricSuccess(true);
-      speak('Verifikasi biometrik berhasil!', true);
-      setTimeout(() => {
-        setBiometricSuccess(false);
-        setForm(f => ({ ...f, email: 'demo@kerjasetara.id', password: 'demo123' }));
-      }, 1500);
-    }, 2000);
-  };
-
-  const handleVoiceInput = () => {
-    if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
-      speak('Maaf, fitur pengenalan suara tidak tersedia di browser ini.');
-      return;
-    }
-    setVoiceListening(true);
-    speak('Silakan ucapkan email kamu...');
-    setTimeout(() => {
-      setVoiceListening(false);
-      speak('Fitur suara sedang dikalibrasi. Silakan ketik manual untuk saat ini.');
-    }, 3000);
-  };
-
   const inputCls = 'w-full px-4 py-3.5 text-sm rounded-2xl border border-slate-200 bg-slate-50 text-slate-800 placeholder-slate-400 outline-none transition-all focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-100';
   const showAccessibility = settings.voiceGuideEnabled || settings.ttsEnabled || settings.signLanguageAvatar;
 
@@ -165,10 +134,6 @@ export default function AuthScreen({ onSuccess, onBack }: AuthScreenProps) {
           <div className="relative z-10 mt-4 flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-xl px-3 py-2 border border-white/20">
             <Mic size={14} className="text-cyan-300 flex-shrink-0" />
             <p className="text-xs text-white/80 flex-1">Panduan suara & aksesibilitas aktif</p>
-            <button onClick={handleVoiceInput}
-              className={`text-[10px] font-bold px-2 py-1 rounded-lg transition-all ${voiceListening ? 'bg-red-400 text-white animate-pulse' : 'bg-white/20 text-white'}`}>
-              {voiceListening ? '● Mendengar...' : '🎙 Input Suara'}
-            </button>
           </div>
         )}
       </div>
@@ -292,56 +257,6 @@ export default function AuthScreen({ onSuccess, onBack }: AuthScreenProps) {
             {loading ? 'Memproses...' : mode === 'login' ? 'Masuk' : 'Buat Akun Gratis'}
           </button>
         </form>
-
-        {/* Alternative login methods */}
-        {mode === 'login' && (
-          <>
-            <div className="flex items-center gap-3">
-              <div className="flex-1 h-px bg-slate-200" />
-              <span className="text-xs text-slate-400 font-medium">atau</span>
-              <div className="flex-1 h-px bg-slate-200" />
-            </div>
-
-            <div className="grid grid-cols-3 gap-2">
-              {/* Biometric */}
-              <button onClick={handleBiometric} disabled={biometricLoading}
-                className={`flex flex-col items-center gap-1.5 p-3 rounded-2xl border-2 transition-all active:scale-95 ${
-                  biometricSuccess ? 'border-green-400 bg-green-50' : 'border-slate-200 bg-white'
-                }`}>
-                {biometricLoading ? (
-                  <Loader2 size={22} className="text-blue-500 animate-spin" />
-                ) : biometricSuccess ? (
-                  <span className="text-xl">✅</span>
-                ) : (
-                  <Fingerprint size={22} className="text-slate-500" />
-                )}
-                <span className={`text-[10px] font-bold ${biometricSuccess ? 'text-green-600' : 'text-slate-500'}`}>
-                  {biometricSuccess ? 'Terverifikasi' : 'Biometrik'}
-                </span>
-              </button>
-
-              {/* Voice */}
-              <button onClick={handleVoiceInput}
-                className={`flex flex-col items-center gap-1.5 p-3 rounded-2xl border-2 transition-all active:scale-95 ${voiceListening ? 'border-red-300 bg-red-50' : 'border-slate-200 bg-white'}`}>
-                {voiceListening ? (
-                  <MicOff size={22} className="text-red-500 animate-pulse" />
-                ) : (
-                  <Mic size={22} className="text-slate-500" />
-                )}
-                <span className="text-[10px] font-bold text-slate-500">
-                  {voiceListening ? 'Aktif...' : 'Perintah Suara'}
-                </span>
-              </button>
-
-              {/* Google simulation */}
-              <button className="flex flex-col items-center gap-1.5 p-3 rounded-2xl border-2 border-slate-200 bg-white active:scale-95 transition-all"
-                onClick={() => speak('Masuk dengan Google sedang dalam pengembangan')}>
-                <span className="text-xl">🔵</span>
-                <span className="text-[10px] font-bold text-slate-500">Google</span>
-              </button>
-            </div>
-          </>
-        )}
 
         <p className="text-center text-sm text-slate-500 pb-4">
           {mode === 'login' ? 'Belum punya akun? ' : 'Sudah punya akun? '}

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import {
   Search, MapPin, Clock, DollarSign, CheckCircle, XCircle, Eye,
   Send, Star, BookOpen, X, AlertCircle, Loader2, ChevronRight,
-  Bell, TrendingUp, Award, Zap, Users, LogOut, User, Phone, Building2,
+  Bell, Zap, Users, LogOut, Phone,
   Flame, Trophy, Target, Plus, ShoppingBag, Sparkles, ExternalLink
 } from 'lucide-react';
 import ScreenHeader from '../components/ScreenHeader';
@@ -790,7 +790,8 @@ function MarketplaceScreen({ listings, myListings, onAddListing }: {
 function ProfileScreen({ gamification, onSignOut }: { gamification: UserGamification | null; onSignOut: () => void }) {
   const { profile, signOut } = useAuth();
   const handleSignOut = async () => { await signOut(); onSignOut(); };
-  const badges = ['🌟 Pelopor', '📚 Pelajar', '💼 Pencari', '♿ Inklusif'];
+  const dbBadges: string[] = gamification?.badges ?? [];
+  const earnedBadges = dbBadges.length > 0 ? dbBadges : [];
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
@@ -841,11 +842,15 @@ function ProfileScreen({ gamification, onSignOut }: { gamification: UserGamifica
             {/* Badges */}
             <div className="mt-4 pt-4 border-t border-slate-100">
               <p className="text-xs font-bold text-slate-500 mb-2">Badge Diperoleh</p>
-              <div className="flex flex-wrap gap-2">
-                {badges.map(b => (
-                  <span key={b} className="text-xs bg-amber-50 text-amber-700 border border-amber-200 px-2.5 py-1 rounded-full font-semibold">{b}</span>
-                ))}
-              </div>
+              {earnedBadges.length > 0 ? (
+                <div className="flex flex-wrap gap-2">
+                  {earnedBadges.map(b => (
+                    <span key={b} className="text-xs bg-amber-50 text-amber-700 border border-amber-200 px-2.5 py-1 rounded-full font-semibold">{b}</span>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-xs text-slate-400">Selesaikan tantangan harian untuk mendapatkan badge.</p>
+              )}
             </div>
 
             <div className="mt-4 pt-4 border-t border-slate-100 space-y-2">
@@ -861,19 +866,7 @@ function ProfileScreen({ gamification, onSignOut }: { gamification: UserGamifica
           </div>
         </div>
 
-        <div className="px-5 space-y-2">
-          {[
-            { icon: User, label: 'Informasi Pribadi', desc: 'Nama, email, telepon' },
-            { icon: Building2, label: 'Pengalaman Kerja', desc: 'Riwayat pekerjaan' },
-            { icon: Award, label: 'Keahlian & Sertifikat', desc: 'Skill yang dikuasai' },
-            { icon: TrendingUp, label: 'Preferensi Kerja', desc: 'Tipe & lokasi kerja' },
-          ].map(({ icon: Icon, label, desc }) => (
-            <button key={label} className="w-full bg-white rounded-2xl p-4 shadow-card flex items-center gap-3 active:scale-[0.98] transition-transform text-left">
-              <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center flex-shrink-0"><Icon size={18} className="text-slate-400" /></div>
-              <div className="flex-1"><p className="text-sm font-semibold text-slate-800">{label}</p><p className="text-xs text-slate-400">{desc}</p></div>
-              <ChevronRight size={16} className="text-slate-300" />
-            </button>
-          ))}
+        <div className="px-5">
           <button onClick={handleSignOut} className="w-full bg-red-50 rounded-2xl p-4 flex items-center gap-3 active:scale-[0.98] transition-transform border border-red-100 mt-2">
             <div className="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center flex-shrink-0"><LogOut size={18} className="text-red-500" /></div>
             <div className="flex-1 text-left"><p className="text-sm font-semibold text-red-600">Keluar</p><p className="text-xs text-red-400">Logout dari akun</p></div>

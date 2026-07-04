@@ -1,11 +1,11 @@
 import { useEffect, useState, useMemo } from 'react';
 import {
   Briefcase, Plus, Users, Clock, CheckCircle, XCircle, Eye,
-  Loader2, X, MapPin, DollarSign, AlertCircle, TrendingUp, Award,
-  ChevronRight, LogOut, Building2, Phone, User, Bell, Zap,
+  Loader2, X, MapPin, DollarSign, AlertCircle,
+  ChevronRight, LogOut, Phone, User, Bell, Zap,
   BarChart3, PieChart, Activity, Target, Heart, Accessibility,
   Check, AlertTriangle, Wallet, HandHeart, Settings, Shield,
-  Lightbulb, Smile, Frown, Meh, Star, Calendar, BookOpen
+  Lightbulb, Smile, Frown, Meh, Star, Calendar, BookOpen, Building2
 } from 'lucide-react';
 import ScreenHeader from '../components/ScreenHeader';
 import { supabase, Job, Application, CsrProgram } from '../lib/supabase';
@@ -481,24 +481,7 @@ function ProfileScreen({ onSignOut }: { onSignOut: () => void }) {
           </div>
         </div>
 
-        <div className="px-5 space-y-2">
-          {[
-            { icon: Building2, label: 'Informasi Perusahaan', desc: 'Nama, ukuran, industri' },
-            { icon: Zap, label: 'Program Inklusivitas', desc: 'Fasilitas & akomodasi' },
-            { icon: TrendingUp, label: 'Statistik Rekrutmen', desc: 'Laporan dan analitik' },
-          ].map(({ icon: Icon, label, desc }) => (
-            <button key={label} className="w-full bg-white rounded-2xl p-4 shadow-card flex items-center gap-3 active:scale-[0.98] transition-transform text-left">
-              <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center flex-shrink-0">
-                <Icon size={18} className="text-slate-400" />
-              </div>
-              <div className="flex-1">
-                <p className="text-sm font-semibold text-slate-800">{label}</p>
-                <p className="text-xs text-slate-400">{desc}</p>
-              </div>
-              <ChevronRight size={16} className="text-slate-300" />
-            </button>
-          ))}
-
+        <div className="px-5">
           <button onClick={handleSignOut}
             className="w-full bg-red-50 rounded-2xl p-4 flex items-center gap-3 active:scale-[0.98] transition-transform border border-red-100 mt-2">
             <div className="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center flex-shrink-0">

@@ -6,14 +6,15 @@ interface LogoProps {
   variant?: 'full' | 'icon';
   className?: string;
   transparent?: boolean;
+  wordmarkScale?: number;
 }
 
 const iconSizes = { sm: 128, md: 160, lg: 224, xl: 320 };
 const wordmarkHeights = { sm: 96, md: 120, lg: 168, xl: 240 };
 
-export default function Logo({ size = 'md', variant = 'full', className = '', transparent = false }: LogoProps) {
+export default function Logo({ size = 'md', variant = 'full', className = '', transparent = false, wordmarkScale = 1 }: LogoProps) {
   const iconSize = iconSizes[size];
-  const wordmarkH = wordmarkHeights[size];
+  const wordmarkH = Math.round(wordmarkHeights[size] * wordmarkScale);
 
   // Assets are white-on-black. screen makes black transparent (white logo on dark bg);
   // invert + multiply flips to black-on-white and removes the white (black logo on light bg).
