@@ -149,7 +149,7 @@ export default function AuthScreen({ onSuccess, onBack }: AuthScreenProps) {
         </div>
 
         <div className="relative z-10 flex items-center gap-3">
-          <Logo size="sm" variant="icon" />
+          <Logo size="sm" variant="icon" transparent />
           <div>
             <h1 className="text-xl font-bold text-white leading-none">
               {mode === 'login' ? 'Selamat Datang!' : 'Buat Akun'}

@@ -59,7 +59,7 @@ function WelcomeStep({ onNext }: { onNext: () => void }) {
         <div className="absolute inset-0 opacity-10"
           style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(255,255,255,0.4) 1px, transparent 0)', backgroundSize: '28px 28px' }} />
         <div className="relative z-10 animate-slide-up">
-          <Logo size="xl" className="mb-6 mx-auto" />
+          <Logo size="xl" className="mb-6 mx-auto" transparent />
           <h1 className="text-2xl font-bold text-white leading-tight mb-3">Selamat Datang!</h1>
           <p className="text-blue-100 leading-relaxed text-base mb-2">Platform inklusif #1 untuk<br />penyandang disabilitas Indonesia</p>
         </div>

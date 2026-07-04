@@ -5,39 +5,64 @@ interface LogoProps {
   size?: 'sm' | 'md' | 'lg' | 'xl';
   variant?: 'full' | 'icon';
   className?: string;
+  transparent?: boolean;
 }
 
-const iconSizes = { sm: 40, md: 56, lg: 80, xl: 104 };
-const wordmarkHeights = { sm: 20, md: 28, lg: 40, xl: 52 };
+const iconSizes = { sm: 64, md: 88, lg: 128, xl: 176 };
+const wordmarkHeights = { sm: 32, md: 44, lg: 64, xl: 88 };
 
-export default function Logo({ size = 'md', variant = 'full', className = '' }: LogoProps) {
+export default function Logo({ size = 'md', variant = 'full', className = '', transparent = false }: LogoProps) {
   const iconSize = iconSizes[size];
   const wordmarkH = wordmarkHeights[size];
 
-  /* mix-blend-mode: screen makes black pixels transparent,
-     revealing only the blue/cyan gradient of the logo on dark backgrounds */
   const imgStyle: React.CSSProperties = {
-    mixBlendMode: 'screen',
+    mixBlendMode: transparent ? 'screen' : 'multiply',
     objectFit: 'contain',
     display: 'block',
   };
 
   if (variant === 'icon') {
+    const content = (
+      <img src={iconImg} alt="Kerja Setara" width={iconSize} height={iconSize} style={imgStyle} />
+    );
+
+    if (transparent) {
+      return (
+        <div className={`flex-shrink-0 ${className}`} style={{ width: iconSize, height: iconSize }}>
+          {content}
+        </div>
+      );
+    }
+
     return (
-      <div className={`flex-shrink-0 ${className}`} style={{ width: iconSize, height: iconSize }}>
-        <img src={iconImg} alt="Kerja Setara" width={iconSize} height={iconSize} style={imgStyle} />
+      <div className={`flex-shrink-0 rounded-full bg-white p-1 ${className}`} style={{ width: iconSize + 8, height: iconSize + 8 }}>
+        {content}
       </div>
     );
   }
 
-  return (
-    <div className={`flex flex-col items-center ${className}`}>
+  const content = (
+    <>
       <img src={iconImg} alt="Kerja Setara icon" width={iconSize} height={iconSize} style={imgStyle} />
       <img
         src={wordmarkImg}
         alt="Kerja Setara"
         style={{ ...imgStyle, height: wordmarkH, width: 'auto' }}
       />
+    </>
+  );
+
+  if (transparent) {
+    return (
+      <div className={`flex flex-col items-center ${className}`}>
+        {content}
+      </div>
+    );
+  }
+
+  return (
+    <div className={`flex flex-col items-center bg-white rounded-3xl px-6 py-4 ${className}`}>
+      {content}
     </div>
   );
 }
