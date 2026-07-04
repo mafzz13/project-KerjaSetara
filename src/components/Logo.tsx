@@ -1,5 +1,5 @@
-import iconImg from '../assets/images/17831484270633045358863284658791.jpg';
-import wordmarkImg from '../assets/images/17831484348778486238767275883105.jpg';
+import iconImg from '../assets/images/6_20260704_141539_0000.svg';
+import wordmarkImg from '../assets/images/7_20260704_141539_0001.svg';
 
 interface LogoProps {
   size?: 'sm' | 'md' | 'lg' | 'xl';
@@ -8,61 +8,35 @@ interface LogoProps {
   transparent?: boolean;
 }
 
-const iconSizes = { sm: 64, md: 88, lg: 128, xl: 176 };
-const wordmarkHeights = { sm: 32, md: 44, lg: 64, xl: 88 };
+const iconSizes = { sm: 96, md: 120, lg: 176, xl: 240 };
+const wordmarkHeights = { sm: 48, md: 60, lg: 88, xl: 120 };
 
 export default function Logo({ size = 'md', variant = 'full', className = '', transparent = false }: LogoProps) {
   const iconSize = iconSizes[size];
   const wordmarkH = wordmarkHeights[size];
 
-  const imgStyle: React.CSSProperties = {
-    mixBlendMode: transparent ? 'screen' : 'multiply',
-    objectFit: 'contain',
-    display: 'block',
-  };
+  // Assets are white-on-black. screen makes black transparent (white logo on dark bg);
+  // invert + multiply flips to black-on-white and removes the white (black logo on light bg).
+  const imgStyle: React.CSSProperties = transparent
+    ? { mixBlendMode: 'screen', objectFit: 'contain', display: 'block' }
+    : { mixBlendMode: 'multiply', filter: 'invert(1)', objectFit: 'contain', display: 'block' };
 
   if (variant === 'icon') {
-    const content = (
-      <img src={iconImg} alt="Kerja Setara" width={iconSize} height={iconSize} style={imgStyle} />
-    );
-
-    if (transparent) {
-      return (
-        <div className={`flex-shrink-0 ${className}`} style={{ width: iconSize, height: iconSize }}>
-          {content}
-        </div>
-      );
-    }
-
     return (
-      <div className={`flex-shrink-0 rounded-full bg-white p-1 ${className}`} style={{ width: iconSize + 8, height: iconSize + 8 }}>
-        {content}
+      <div className={`flex-shrink-0 ${className}`} style={{ width: iconSize, height: iconSize }}>
+        <img src={iconImg} alt="Kerja Setara" width={iconSize} height={iconSize} style={imgStyle} />
       </div>
     );
   }
 
-  const content = (
-    <>
+  return (
+    <div className={`flex flex-col items-center ${className}`}>
       <img src={iconImg} alt="Kerja Setara icon" width={iconSize} height={iconSize} style={imgStyle} />
       <img
         src={wordmarkImg}
         alt="Kerja Setara"
         style={{ ...imgStyle, height: wordmarkH, width: 'auto' }}
       />
-    </>
-  );
-
-  if (transparent) {
-    return (
-      <div className={`flex flex-col items-center ${className}`}>
-        {content}
-      </div>
-    );
-  }
-
-  return (
-    <div className={`flex flex-col items-center bg-white rounded-3xl px-6 py-4 ${className}`}>
-      {content}
     </div>
   );
 }
