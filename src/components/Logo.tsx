@@ -8,8 +8,8 @@ interface LogoProps {
   transparent?: boolean;
 }
 
-const iconSizes = { sm: 96, md: 120, lg: 176, xl: 240 };
-const wordmarkHeights = { sm: 48, md: 60, lg: 88, xl: 120 };
+const iconSizes = { sm: 128, md: 160, lg: 224, xl: 320 };
+const wordmarkHeights = { sm: 64, md: 80, lg: 112, xl: 160 };
 
 export default function Logo({ size = 'md', variant = 'full', className = '', transparent = false }: LogoProps) {
   const iconSize = iconSizes[size];
