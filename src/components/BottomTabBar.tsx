@@ -37,9 +37,8 @@ export default function BottomTabBar({ role, activeTab, onTabChange, badges = {}
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50"
       style={{ background: 'rgba(255,255,255,0.96)', backdropFilter: 'blur(12px)', borderTop: '1px solid rgba(0,0,0,0.06)', paddingBottom: 'env(safe-area-inset-bottom)' }}>
-      <div className="flex items-stretch max-w-lg mx-auto">
-        {tabs.map(tab => {
-          const Icon = tab.icon;
+      <div className="flex items-stretch max-w-5xl mx-auto">
+        {tabs.map(tab => {          const Icon = tab.icon;
           const isActive = activeTab === tab.id;
 
           if (tab.special) {
