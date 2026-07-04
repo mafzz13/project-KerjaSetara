@@ -47,7 +47,7 @@ export default function BottomTabBar({ role, activeTab, onTabChange, badges = {}
                 className="flex flex-col items-center justify-center flex-1 py-2 gap-0.5 relative"
                 style={{ minHeight: 56 }}>
                 <div className="w-12 h-12 rounded-2xl flex items-center justify-center -mt-6 shadow-lg active:scale-95 transition-transform"
-                  style={{ background: 'linear-gradient(135deg, #1565c0 0%, #0097a7 100%)' }}>
+                  style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' }}>
                   <Icon size={22} className="text-white" />
                 </div>
                 <span className="text-[10px] font-semibold text-slate-400 mt-0.5">{tab.label}</span>
@@ -91,7 +91,7 @@ export function EmployerMoreMenu({ isOpen, onClose, onNavigate, badges = {} }: {
   if (!isOpen) return null;
 
   const menuItems = [
-    { id: 'analytics', label: 'Analitik Inklusi', desc: 'Dashboard KPI rekrutmen', icon: BarChart3, color: '#1565c0' },
+    { id: 'analytics', label: 'Analitik Inklusi', desc: 'Dashboard KPI rekrutmen', icon: BarChart3, color: '#3b82f6' },
     { id: 'csr', label: 'Program CSR', desc: 'Kelola dana & dampak', icon: HandHeart, color: '#059669' },
     { id: 'assessment', label: 'Audit Aksesibilitas', desc: 'Nilai infrastruktur kantor', icon: Shield, color: '#7c3aed' },
     { id: 'profile', label: 'Profil Perusahaan', desc: 'Informasi bisnis', icon: User, color: '#d97706' },

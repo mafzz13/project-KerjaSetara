@@ -11,8 +11,8 @@ interface OnboardingScreenProps {
 type OStep = 'welcome' | 'disability' | 'configure' | 'ready';
 
 const disabilityOptions: { value: DisabilityProfile; label: string; emoji: string; desc: string; color: string }[] = [
-  { value: 'netra', label: 'Disabilitas Netra', emoji: '👁', desc: 'Tunanetra atau low vision', color: '#1565c0' },
-  { value: 'tuli', label: 'Disabilitas Rungu/Tuli', emoji: '👂', desc: 'Tunarungu atau hard of hearing', color: '#0097a7' },
+  { value: 'netra', label: 'Disabilitas Netra', emoji: '👁', desc: 'Tunanetra atau low vision', color: '#3b82f6' },
+  { value: 'tuli', label: 'Disabilitas Rungu/Tuli', emoji: '👂', desc: 'Tunarungu atau hard of hearing', color: '#06b6d4' },
   { value: 'fisik', label: 'Disabilitas Fisik', emoji: '♿', desc: 'Mobilitas terbatas atau tunadaksa', color: '#7c3aed' },
   { value: 'intelektual', label: 'Disabilitas Intelektual', emoji: '🧠', desc: 'Kesulitan belajar atau kognitif', color: '#d97706' },
   { value: 'mental', label: 'Disabilitas Mental', emoji: '💙', desc: 'Psikososial atau kesehatan mental', color: '#059669' },
@@ -55,7 +55,7 @@ function WelcomeStep({ onNext }: { onNext: () => void }) {
   return (
     <div className="flex flex-col h-full">
       <div className="flex-1 flex flex-col items-center justify-center px-8 text-center relative overflow-hidden"
-        style={{ background: 'linear-gradient(160deg, #0B1B6B 0%, #1565c0 60%, #0097a7 100%)' }}>
+        style={{ background: 'linear-gradient(160deg, #1e40af 0%, #3b82f6 60%, #06b6d4 100%)' }}>
         <div className="absolute inset-0 opacity-10"
           style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(255,255,255,0.4) 1px, transparent 0)', backgroundSize: '28px 28px' }} />
         <div className="relative z-10 animate-slide-up">
@@ -83,7 +83,7 @@ function WelcomeStep({ onNext }: { onNext: () => void }) {
       <div className="bg-white px-6 py-6 flex-shrink-0">
         <button onClick={onNext}
           className="w-full flex items-center justify-center gap-2 font-bold py-4 rounded-2xl text-white transition-all active:scale-95 shadow-lg text-base"
-          style={{ background: 'linear-gradient(135deg, #1565c0 0%, #0097a7 100%)' }}>
+          style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' }}>
           Mulai Setup Aksesibilitas <ArrowRight size={18} />
         </button>
         <p className="text-center text-slate-400 text-xs mt-3">
@@ -136,7 +136,7 @@ function DisabilityStep({ selected, onSelect, onNext, onSkip }: {
       <div className="px-5 py-4 border-t border-slate-100 space-y-2.5 flex-shrink-0">
         <button onClick={onNext} disabled={!selected}
           className="w-full flex items-center justify-center gap-2 font-bold py-4 rounded-2xl text-white transition-all active:scale-95 disabled:opacity-40 shadow-lg"
-          style={{ background: 'linear-gradient(135deg, #1565c0 0%, #0097a7 100%)' }}>
+          style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' }}>
           Konfigurasi Otomatis <ChevronRight size={18} />
         </button>
         <button onClick={onSkip} className="w-full py-2.5 text-sm text-slate-400 font-medium">
@@ -232,7 +232,7 @@ function ConfigureStep({ profile, onNext }: { profile: NonNullable<DisabilityPro
       <div className="px-5 py-4 border-t border-slate-100 flex-shrink-0">
         <button onClick={onNext} disabled={!applied}
           className="w-full flex items-center justify-center gap-2 font-bold py-4 rounded-2xl text-white transition-all active:scale-95 disabled:opacity-40 shadow-lg"
-          style={{ background: 'linear-gradient(135deg, #1565c0 0%, #0097a7 100%)' }}>
+          style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' }}>
           Lanjut <ChevronRight size={18} />
         </button>
       </div>
@@ -244,7 +244,7 @@ function ReadyStep({ onDone, onLogin }: { onDone: () => void; onLogin: () => voi
   return (
     <div className="flex flex-col h-full">
       <div className="flex-1 flex flex-col items-center justify-center px-8 text-center"
-        style={{ background: 'linear-gradient(160deg, #0B1B6B 0%, #1565c0 60%, #0097a7 100%)' }}>
+        style={{ background: 'linear-gradient(160deg, #1e40af 0%, #3b82f6 60%, #06b6d4 100%)' }}>
         <div className="text-6xl mb-6 animate-slide-up">🎉</div>
         <div className="animate-slide-up">
           <h2 className="text-2xl font-bold text-white mb-3">Platform Siap Untukmu!</h2>
@@ -271,7 +271,7 @@ function ReadyStep({ onDone, onLogin }: { onDone: () => void; onLogin: () => voi
       <div className="bg-white px-6 py-6 space-y-3 flex-shrink-0">
         <button onClick={onDone}
           className="w-full flex items-center justify-center gap-2 font-bold py-4 rounded-2xl text-white active:scale-95 shadow-lg"
-          style={{ background: 'linear-gradient(135deg, #1565c0 0%, #0097a7 100%)' }}>
+          style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' }}>
           Buat Akun Gratis <ArrowRight size={18} />
         </button>
         <button onClick={onLogin} className="w-full py-3 text-sm font-semibold text-blue-600 rounded-2xl border-2 border-blue-100 active:scale-95 transition-all">

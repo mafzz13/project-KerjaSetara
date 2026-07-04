@@ -3,7 +3,8 @@ import {
   Search, MapPin, Clock, DollarSign, CheckCircle, XCircle, Eye,
   Send, Star, BookOpen, X, AlertCircle, Loader2, ChevronRight,
   Bell, Zap, Users, LogOut, Phone,
-  Flame, Trophy, Target, Plus, ShoppingBag, Sparkles, ExternalLink
+  Flame, Trophy, Target, Plus, ShoppingBag, Sparkles, ExternalLink,
+  Pencil, Save, User, Mail
 } from 'lucide-react';
 import ScreenHeader from '../components/ScreenHeader';
 import {
@@ -112,7 +113,7 @@ function ApplySheet({ job, onClose, onSuccess }: { job: Job; onClose: () => void
           className="w-full px-4 py-3 text-sm rounded-2xl border border-slate-200 bg-slate-50 outline-none focus:border-blue-400 focus:bg-white resize-none transition-all" />
         <button onClick={handleApply} disabled={loading}
           className="w-full flex items-center justify-center gap-2 text-white font-bold py-4 rounded-2xl active:scale-95 disabled:opacity-60"
-          style={{ background: 'linear-gradient(135deg, #1565c0 0%, #0097a7 100%)' }}>
+          style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' }}>
           {loading ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} />}
           {loading ? 'Mengirim...' : 'Kirim Lamaran'}
         </button>
@@ -129,7 +130,7 @@ function JobDetailSheet({ job, applied, matchScore, onClose, onApply }: { job: J
         <div className="overflow-y-auto flex-1 px-5 pb-4 space-y-4">
           <div className="flex items-start gap-3">
             <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-white font-bold text-lg flex-shrink-0"
-              style={{ background: 'linear-gradient(135deg, #1565c0 0%, #0097a7 100%)' }}>{job.company_name[0]}</div>
+              style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' }}>{job.company_name[0]}</div>
             <div className="flex-1">
               <h3 className="font-bold text-slate-900 text-lg leading-tight">{job.title}</h3>
               <p className="text-sm text-slate-500">{job.company_name}</p>
@@ -159,7 +160,7 @@ function JobDetailSheet({ job, applied, matchScore, onClose, onApply }: { job: J
             </div>
           ) : (
             <button onClick={onApply} className="w-full flex items-center justify-center gap-2 text-white font-bold py-4 rounded-2xl active:scale-95"
-              style={{ background: 'linear-gradient(135deg, #1565c0 0%, #0097a7 100%)' }}>
+              style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' }}>
               <Send size={18} /> Lamar Sekarang
             </button>
           )}
@@ -184,7 +185,7 @@ function HomeScreen({ jobs, applications, enrollments, gamification, onJobPress,
   return (
     <div className="flex-1 overflow-y-auto">
       <div className="relative px-5 pt-12 pb-8 overflow-hidden"
-        style={{ background: 'linear-gradient(160deg, #0B1B6B 0%, #1565c0 100%)' }}>
+        style={{ background: 'linear-gradient(160deg, #1e40af 0%, #3b82f6 100%)' }}>
         <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(255,255,255,0.4) 1px, transparent 0)', backgroundSize: '28px 28px' }} />
         <div className="relative z-10 flex items-start justify-between mb-5">
           <div>
@@ -241,9 +242,9 @@ function HomeScreen({ jobs, applications, enrollments, gamification, onJobPress,
       {/* Stats */}
       <div className="px-4 py-4 grid grid-cols-3 gap-3">
         {[
-          { label: 'Lamaran', value: applications.length, color: '#1565c0' },
+          { label: 'Lamaran', value: applications.length, color: '#3b82f6' },
           { label: 'Proses', value: applications.filter(a => ['reviewed', 'interview'].includes(a.status)).length, color: '#7c3aed' },
-          { label: 'Pelatihan', value: enrollments.length, color: '#0097a7' },
+          { label: 'Pelatihan', value: enrollments.length, color: '#06b6d4' },
         ].map(s => (
           <div key={s.label} className="bg-white rounded-2xl p-3 shadow-card text-center">
             <div className="text-2xl font-bold" style={{ color: s.color }}>{s.value}</div>
@@ -258,8 +259,8 @@ function HomeScreen({ jobs, applications, enrollments, gamification, onJobPress,
           <h2 className="text-sm font-bold text-slate-700 mb-3">Aksi Cepat</h2>
           <div className="grid grid-cols-2 gap-3">
             {[
-              { icon: Sparkles, label: 'AI Job Match', sub: 'Rekomendasi pintarku', tab: 'jobs', grad: ['#1565c0','#0d47a1'] },
-              { icon: BookOpen, label: 'Game Training', sub: 'Kumpul XP & badge', tab: 'training', grad: ['#0097a7','#006064'] },
+              { icon: Sparkles, label: 'AI Job Match', sub: 'Rekomendasi pintarku', tab: 'jobs', grad: ['#3b82f6','#1d4ed8'] },
+              { icon: BookOpen, label: 'Game Training', sub: 'Kumpul XP & badge', tab: 'training', grad: ['#06b6d4','#0891b2'] },
               { icon: ShoppingBag, label: 'Marketplace', sub: 'Jual jasa & portfolio', tab: 'market', grad: ['#7c3aed','#5b21b6'] },
               { icon: Trophy, label: 'Leaderboard', sub: `Level ${gamification ? calcLevel(gamification.xp) : 1}`, tab: 'training', grad: ['#d97706','#b45309'] },
             ].map(({ icon: Icon, label, sub, tab, grad }) => (
@@ -294,7 +295,7 @@ function HomeScreen({ jobs, applications, enrollments, gamification, onJobPress,
                     className="w-full bg-white rounded-2xl p-4 shadow-card text-left active:scale-[0.98] transition-transform border border-slate-50">
                     <div className="flex items-start gap-3">
                       <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm flex-shrink-0"
-                        style={{ background: 'linear-gradient(135deg, #1565c0 0%, #0097a7 100%)' }}>{job.company_name[0]}</div>
+                        style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' }}>{job.company_name[0]}</div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-start justify-between gap-1 mb-1">
                           <h3 className="font-semibold text-slate-900 text-sm truncate">{job.title}</h3>
@@ -354,13 +355,13 @@ function JobsScreen({ jobs, applications, onJobPress }: { jobs: Job[]; applicati
           <div className="flex gap-2 overflow-x-auto flex-1 pb-0.5" style={{ scrollbarWidth: 'none' }}>
             <button onClick={() => setSelectedTag('')}
               className={`flex-shrink-0 text-xs font-semibold px-3 py-1.5 rounded-full transition-all ${!selectedTag ? 'text-white' : 'bg-slate-100 text-slate-600'}`}
-              style={!selectedTag ? { background: 'linear-gradient(135deg, #1565c0, #0097a7)' } : {}}>
+              style={!selectedTag ? { background: 'linear-gradient(135deg, #3b82f6, #06b6d4)' } : {}}>
               Semua
             </button>
             {allTags.map(t => (
               <button key={t} onClick={() => setSelectedTag(selectedTag === t ? '' : t)}
                 className={`flex-shrink-0 text-xs font-semibold px-3 py-1.5 rounded-full transition-all ${selectedTag === t ? 'text-white' : 'bg-slate-100 text-slate-600'}`}
-                style={selectedTag === t ? { background: 'linear-gradient(135deg, #1565c0, #0097a7)' } : {}}>
+                style={selectedTag === t ? { background: 'linear-gradient(135deg, #3b82f6, #06b6d4)' } : {}}>
                 {t}
               </button>
             ))}
@@ -385,7 +386,7 @@ function JobsScreen({ jobs, applications, onJobPress }: { jobs: Job[]; applicati
               className="w-full bg-white rounded-2xl p-4 shadow-card text-left active:scale-[0.98] transition-transform border border-slate-50">
               <div className="flex items-start gap-3">
                 <div className="w-11 h-11 rounded-2xl flex items-center justify-center text-white font-bold flex-shrink-0"
-                  style={{ background: 'linear-gradient(135deg, #1565c0 0%, #0097a7 100%)' }}>{job.company_name[0]}</div>
+                  style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' }}>{job.company_name[0]}</div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between gap-2">
                     <h3 className="font-bold text-slate-900 text-sm leading-tight">{job.title}</h3>
@@ -474,7 +475,7 @@ function TrainingScreen({ modules, enrollments, gamification, challenges, comple
                         <span className="text-xs font-bold text-blue-700">{e.progress}%</span>
                       </div>
                       <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
-                        <div className="h-full rounded-full" style={{ width: `${e.progress}%`, background: 'linear-gradient(90deg, #1565c0, #0097a7)' }} />
+                        <div className="h-full rounded-full" style={{ width: `${e.progress}%`, background: 'linear-gradient(90deg, #3b82f6, #06b6d4)' }} />
                       </div>
                     </div>
                   );
@@ -510,7 +511,7 @@ function TrainingScreen({ modules, enrollments, gamification, challenges, comple
                       ) : (
                         <button onClick={() => onEnroll(mod.id)}
                           className="text-[11px] font-bold text-white px-3 py-1.5 rounded-full active:scale-95 transition-transform"
-                          style={{ background: 'linear-gradient(135deg, #1565c0, #0097a7)' }}>
+                          style={{ background: 'linear-gradient(135deg, #3b82f6, #06b6d4)' }}>
                           Daftar +{mod.duration_hours * 5} XP
                         </button>
                       )}
@@ -567,7 +568,7 @@ function TrainingScreen({ modules, enrollments, gamification, challenges, comple
                         {!done && (
                           <button onClick={() => onCompleteChallenge(ch.id, ch.xp_reward, ch.coin_reward)}
                             className="text-[11px] font-bold text-white px-3 py-1.5 rounded-xl active:scale-95"
-                            style={{ background: 'linear-gradient(135deg, #1565c0, #0097a7)' }}>
+                            style={{ background: 'linear-gradient(135deg, #3b82f6, #06b6d4)' }}>
                             Selesaikan
                           </button>
                         )}
@@ -602,7 +603,7 @@ function TrainingScreen({ modules, enrollments, gamification, challenges, comple
                     {medal ? <span className="text-xl">{medal}</span> : <span className="text-sm font-bold text-slate-400">#{i + 1}</span>}
                   </div>
                   <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold flex-shrink-0"
-                    style={{ background: 'linear-gradient(135deg, #1565c0, #0097a7)' }}>
+                    style={{ background: 'linear-gradient(135deg, #3b82f6, #06b6d4)' }}>
                     {name[0]}
                   </div>
                   <div className="flex-1 min-w-0">
@@ -661,7 +662,7 @@ function MarketplaceScreen({ listings, myListings, onAddListing }: {
         right={
           <button onClick={() => setShowAdd(true)}
             className="w-9 h-9 rounded-xl flex items-center justify-center text-white active:scale-95 transition-transform"
-            style={{ background: 'linear-gradient(135deg, #1565c0, #0097a7)' }}>
+            style={{ background: 'linear-gradient(135deg, #3b82f6, #06b6d4)' }}>
             <Plus size={18} />
           </button>
         }
@@ -684,7 +685,7 @@ function MarketplaceScreen({ listings, myListings, onAddListing }: {
             {tab === 'mine' && (
               <button onClick={() => setShowAdd(true)}
                 className="mt-4 flex items-center gap-2 text-sm font-bold text-white px-5 py-2.5 rounded-2xl active:scale-95"
-                style={{ background: 'linear-gradient(135deg, #1565c0 0%, #0097a7 100%)' }}>
+                style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' }}>
                 <Plus size={16} /> Tambah Listing
               </button>
             )}
@@ -774,7 +775,7 @@ function MarketplaceScreen({ listings, myListings, onAddListing }: {
             <div className="px-5 py-4 border-t border-slate-100">
               <button onClick={handleAdd} disabled={loading || !form.title || !form.description}
                 className="w-full flex items-center justify-center gap-2 text-white font-bold py-4 rounded-2xl active:scale-95 disabled:opacity-60"
-                style={{ background: 'linear-gradient(135deg, #1565c0 0%, #0097a7 100%)' }}>
+                style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' }}>
                 {loading ? <Loader2 size={18} className="animate-spin" /> : <Plus size={18} />}
                 {loading ? 'Menyimpan...' : 'Publikasikan Layanan'}
               </button>
@@ -788,22 +789,78 @@ function MarketplaceScreen({ listings, myListings, onAddListing }: {
 
 /* ─── PROFILE SCREEN ─── */
 function ProfileScreen({ gamification, onSignOut }: { gamification: UserGamification | null; onSignOut: () => void }) {
-  const { profile, signOut } = useAuth();
+  const { profile, signOut, refreshProfile } = useAuth();
+  const [editing, setEditing] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [form, setForm] = useState({
+    full_name: '',
+    disability_type: '',
+    location: '',
+    phone: '',
+  });
+
+  useEffect(() => {
+    if (profile) {
+      setForm({
+        full_name: profile.full_name || '',
+        disability_type: profile.disability_type || '',
+        location: profile.location || '',
+        phone: profile.phone || '',
+      });
+    }
+  }, [profile]);
+
   const handleSignOut = async () => { await signOut(); onSignOut(); };
+
+  const handleSave = async () => {
+    if (!profile) return;
+    setSaving(true);
+    const { error } = await supabase
+      .from('profiles')
+      .update({
+        full_name: form.full_name,
+        disability_type: form.disability_type || null,
+        location: form.location || null,
+        phone: form.phone || null,
+      })
+      .eq('id', profile.id);
+
+    if (!error) {
+      await refreshProfile();
+      setEditing(false);
+    }
+    setSaving(false);
+  };
+
   const dbBadges: string[] = gamification?.badges ?? [];
   const earnedBadges = dbBadges.length > 0 ? dbBadges : [];
+  const inputCls = 'w-full px-4 py-3 text-sm rounded-xl border border-slate-200 bg-slate-50 text-slate-800 outline-none transition-all focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-100';
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
-      <ScreenHeader title="Profil Saya" />
+      <ScreenHeader title="Profil Saya" right={
+        editing ? (
+          <button onClick={handleSave} disabled={saving}
+            className="flex items-center gap-1.5 text-xs font-bold text-white px-3 py-2 rounded-xl active:scale-95 transition-transform"
+            style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' }}>
+            {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
+            {saving ? 'Menyimpan...' : 'Simpan'}
+          </button>
+        ) : (
+          <button onClick={() => setEditing(true)}
+            className="flex items-center gap-1.5 text-xs font-bold text-blue-600 px-3 py-2 rounded-xl bg-blue-50 active:scale-95 transition-transform">
+            <Pencil size={14} /> Edit
+          </button>
+        )
+      } />
       <div className="flex-1 overflow-y-auto pb-6">
-        <div className="relative h-32 overflow-hidden" style={{ background: 'linear-gradient(160deg, #0B1B6B 0%, #1565c0 100%)' }} />
+        <div className="relative h-32 overflow-hidden" style={{ background: 'linear-gradient(160deg, #1e40af 0%, #3b82f6 100%)' }} />
         <div className="px-5 -mt-12 mb-6">
           <div className="bg-white rounded-3xl p-5 shadow-card">
             <div className="flex items-start gap-4">
               <div className="relative">
                 <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-white text-2xl font-bold flex-shrink-0"
-                  style={{ background: 'linear-gradient(135deg, #1565c0 0%, #0097a7 100%)' }}>
+                  style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' }}>
                   {profile?.full_name?.[0]?.toUpperCase() || 'U'}
                 </div>
                 {gamification && (
@@ -822,47 +879,97 @@ function ProfileScreen({ gamification, onSignOut }: { gamification: UserGamifica
               </div>
             </div>
 
-            {gamification && (
-              <div className="mt-4 pt-4 border-t border-slate-100">
-                <div className="grid grid-cols-3 gap-2 text-center">
+            {/* Edit Form */}
+            {editing ? (
+              <div className="mt-4 pt-4 border-t border-slate-100 space-y-3">
+                <div>
+                  <label className="block text-xs font-bold text-slate-500 mb-1.5 ml-1">Nama Lengkap</label>
+                  <div className="relative">
+                    <User size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <input type="text" value={form.full_name} onChange={e => setForm(f => ({ ...f, full_name: e.target.value }))}
+                      placeholder="Nama lengkap" className={`${inputCls} pl-9`} />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-500 mb-1.5 ml-1">Jenis Disabilitas</label>
+                  <select value={form.disability_type} onChange={e => setForm(f => ({ ...f, disability_type: e.target.value }))}
+                    className={inputCls}>
+                    <option value="">Tidak ada / Tidak ingin menyebutkan</option>
+                    <option value="Disabilitas Netra">Disabilitas Netra</option>
+                    <option value="Disabilitas Rungu">Disabilitas Rungu/Tuli</option>
+                    <option value="Disabilitas Fisik">Disabilitas Fisik/Motorik</option>
+                    <option value="Disabilitas Intelektual">Disabilitas Intelektual</option>
+                    <option value="Disabilitas Mental">Disabilitas Psikososial/Mental</option>
+                    <option value="Disabilitas Ganda">Disabilitas Ganda</option>
+                    <option value="Lainnya">Lainnya</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-500 mb-1.5 ml-1">Lokasi / Kota</label>
+                  <div className="relative">
+                    <MapPin size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <input type="text" value={form.location} onChange={e => setForm(f => ({ ...f, location: e.target.value }))}
+                      placeholder="Jakarta, Bandung, dll." className={`${inputCls} pl-9`} />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-500 mb-1.5 ml-1">Nomor Telepon</label>
+                  <div className="relative">
+                    <Phone size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <input type="tel" value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
+                      placeholder="08xxxxxxxxxx" className={`${inputCls} pl-9`} />
+                  </div>
+                </div>
+                <button onClick={() => setEditing(false)}
+                  className="w-full py-2.5 text-sm font-medium text-slate-500 bg-slate-100 rounded-xl active:scale-95 transition-transform">
+                  Batal
+                </button>
+              </div>
+            ) : (
+              <>
+                {gamification && (
+                  <div className="mt-4 pt-4 border-t border-slate-100">
+                    <div className="grid grid-cols-3 gap-2 text-center">
+                      {[
+                        { label: 'XP', value: gamification.xp, color: '#d97706' },
+                        { label: 'Coins', value: gamification.coins, color: '#f59e0b' },
+                        { label: 'Streak', value: `${gamification.streak_days}d`, color: '#ef4444' },
+                      ].map(s => (
+                        <div key={s.label} className="bg-slate-50 rounded-xl py-2">
+                          <div className="text-base font-bold" style={{ color: s.color }}>{s.value}</div>
+                          <div className="text-[10px] text-slate-400">{s.label}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Badges */}
+                <div className="mt-4 pt-4 border-t border-slate-100">
+                  <p className="text-xs font-bold text-slate-500 mb-2">Badge Diperoleh</p>
+                  {earnedBadges.length > 0 ? (
+                    <div className="flex flex-wrap gap-2">
+                      {earnedBadges.map(b => (
+                        <span key={b} className="text-xs bg-amber-50 text-amber-700 border border-amber-200 px-2.5 py-1 rounded-full font-semibold">{b}</span>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-xs text-slate-400">Selesaikan tantangan harian untuk mendapatkan badge.</p>
+                  )}
+                </div>
+
+                <div className="mt-4 pt-4 border-t border-slate-100 space-y-2">
                   {[
-                    { label: 'XP', value: gamification.xp, color: '#d97706' },
-                    { label: 'Coins', value: gamification.coins, color: '#f59e0b' },
-                    { label: 'Streak', value: `${gamification.streak_days}d`, color: '#ef4444' },
-                  ].map(s => (
-                    <div key={s.label} className="bg-slate-50 rounded-xl py-2">
-                      <div className="text-base font-bold" style={{ color: s.color }}>{s.value}</div>
-                      <div className="text-[10px] text-slate-400">{s.label}</div>
+                    { icon: MapPin, label: profile?.location || 'Lokasi belum diisi' },
+                    { icon: Phone, label: profile?.phone || 'Nomor belum diisi' },
+                  ].map(({ icon: Icon, label }) => (
+                    <div key={label} className="flex items-center gap-2 text-sm text-slate-500">
+                      <Icon size={14} className="text-slate-300" /> {label}
                     </div>
                   ))}
                 </div>
-              </div>
+              </>
             )}
-
-            {/* Badges */}
-            <div className="mt-4 pt-4 border-t border-slate-100">
-              <p className="text-xs font-bold text-slate-500 mb-2">Badge Diperoleh</p>
-              {earnedBadges.length > 0 ? (
-                <div className="flex flex-wrap gap-2">
-                  {earnedBadges.map(b => (
-                    <span key={b} className="text-xs bg-amber-50 text-amber-700 border border-amber-200 px-2.5 py-1 rounded-full font-semibold">{b}</span>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-xs text-slate-400">Selesaikan tantangan harian untuk mendapatkan badge.</p>
-              )}
-            </div>
-
-            <div className="mt-4 pt-4 border-t border-slate-100 space-y-2">
-              {[
-                { icon: MapPin, label: profile?.location || 'Lokasi belum diisi' },
-                { icon: Phone, label: profile?.phone || 'Nomor belum diisi' },
-              ].map(({ icon: Icon, label }) => (
-                <div key={label} className="flex items-center gap-2 text-sm text-slate-500">
-                  <Icon size={14} className="text-slate-300" /> {label}
-                </div>
-              ))}
-            </div>
           </div>
         </div>
 
@@ -962,7 +1069,7 @@ export default function JobSeekerApp({ activeTab, onTabChange, onSignOut }: {
     return (
       <div className="flex-1 flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
-          <div className="w-12 h-12 rounded-2xl animate-pulse" style={{ background: 'linear-gradient(135deg, #1565c0 0%, #0097a7 100%)' }} />
+          <div className="w-12 h-12 rounded-2xl animate-pulse" style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' }} />
           <div className="flex gap-1">
             {[0,1,2].map(i => <div key={i} className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-bounce" style={{ animationDelay: `${i*150}ms` }} />)}
           </div>

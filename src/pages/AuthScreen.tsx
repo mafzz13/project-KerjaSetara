@@ -139,7 +139,7 @@ function VoiceLoginModal({ isOpen, onClose, onSuccess, speak }: {
         <div className="p-5">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #1565c0, #0097a7)' }}>
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #3b82f6, #06b6d4)' }}>
                 <Mic size={20} className="text-white" />
               </div>
               <div>
@@ -390,7 +390,7 @@ export default function AuthScreen({ onSuccess, onBack }: AuthScreenProps) {
     <div className="app-screen flex flex-col bg-white overflow-y-auto">
       {/* Header */}
       <div className="flex-shrink-0 px-5 pt-12 pb-6 relative overflow-hidden"
-        style={{ background: 'linear-gradient(160deg, #0B1B6B 0%, #1565c0 100%)' }}>
+        style={{ background: 'linear-gradient(160deg, #1e40af 0%, #3b82f6 100%)' }}>
         <div className="absolute inset-0 opacity-10"
           style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(255,255,255,0.4) 1px, transparent 0)', backgroundSize: '32px 32px' }} />
 
@@ -545,7 +545,7 @@ export default function AuthScreen({ onSuccess, onBack }: AuthScreenProps) {
 
           <button type="submit" disabled={loading}
             className="w-full flex items-center justify-center gap-2 text-white font-bold py-4 rounded-2xl transition-all active:scale-95 disabled:opacity-60 shadow-lg mt-2"
-            style={{ background: 'linear-gradient(135deg, #1565c0 0%, #0097a7 100%)' }}>
+            style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' }}>
             {loading && <Loader2 size={18} className="animate-spin" />}
             {loading ? 'Memproses...' : mode === 'login' ? 'Masuk' : 'Buat Akun Gratis'}
           </button>

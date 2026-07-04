@@ -11,7 +11,7 @@ import Logo from './components/Logo';
 
 function SplashScreen() {
   return (
-    <div className="app-screen flex flex-col items-center justify-center" style={{ background: 'linear-gradient(160deg, #0B1B6B 0%, #1565c0 55%, #0097a7 100%)' }}>
+    <div className="app-screen flex flex-col items-center justify-center" style={{ background: 'linear-gradient(160deg, #1e40af 0%, #3b82f6 55%, #06b6d4 100%)' }}>
       <div className="flex flex-col items-center gap-4 animate-fade-in">
         <Logo size="xl" className="opacity-0 animate-fade-in" transparent wordmarkScale={1.6} />
         <div className="flex gap-1.5 mt-8">
