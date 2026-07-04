@@ -9,7 +9,7 @@ interface LogoProps {
 }
 
 const iconSizes = { sm: 128, md: 160, lg: 224, xl: 320 };
-const wordmarkHeights = { sm: 64, md: 80, lg: 112, xl: 160 };
+const wordmarkHeights = { sm: 96, md: 120, lg: 168, xl: 240 };
 
 export default function Logo({ size = 'md', variant = 'full', className = '', transparent = false }: LogoProps) {
   const iconSize = iconSizes[size];
