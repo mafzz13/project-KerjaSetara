@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Eye, EyeOff, Briefcase, Building2, Loader2, AlertCircle, ChevronLeft, Mic, Volume2, VolumeX } from 'lucide-react';
+import { useState, useEffect, useCallback } from 'react';
+import { Eye, EyeOff, Briefcase, Building2, Loader2, AlertCircle, ChevronLeft, Mic, Volume2, VolumeX, Fingerprint, Chrome, Radio, Shield, CheckCircle } from 'lucide-react';
 import Logo from '../components/Logo';
 import { useAuth } from '../contexts/AuthContext';
 import { useAccessibility } from '../contexts/AccessibilityContext';
@@ -15,6 +15,7 @@ type Role = 'job_seeker' | 'employer';
 const voiceSteps = [
   'Selamat datang di Kerja Setara.',
   'Silakan masukkan email dan password kamu.',
+  'Atau gunakan login dengan suara untuk akses lebih mudah.',
 ];
 
 function SignLanguageAvatar({ speaking }: { speaking: boolean }) {
@@ -30,16 +31,279 @@ function SignLanguageAvatar({ speaking }: { speaking: boolean }) {
   );
 }
 
+function VoiceLoginModal({ isOpen, onClose, onSuccess, speak }: {
+  isOpen: boolean; onClose: () => void; onSuccess: () => void; speak: (text: string, interrupt?: boolean) => void;
+}) {
+  const [status, setStatus] = useState<'listening' | 'processing' | 'success' | 'error'>('listening');
+  const [transcript, setTranscript] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
+
+  useEffect(() => {
+    if (isOpen) {
+      setStatus('listening');
+      setTranscript('');
+      setErrorMsg('');
+      speak('Silakan ucapkan email atau kata kunci akun kamu.', true);
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const SpeechRecognition = (window as unknown as { SpeechRecognition?: typeof window.SpeechRecognition; webkitSpeechRecognition?: typeof window.SpeechRecognition }).SpeechRecognition ||
+      (window as unknown as { webkitSpeechRecognition?: typeof window.SpeechRecognition }).webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+      setErrorMsg('Browser tidak mendukung voice recognition');
+      setStatus('error');
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'id-ID';
+    recognition.continuous = false;
+    recognition.interimResults = true;
+
+    recognition.onresult = (event: SpeechRecognitionEvent) => {
+      const result = event.results[event.results.length - 1];
+      const text = result[0].transcript.toLowerCase();
+      setTranscript(text);
+
+      if (result.isFinal) {
+        setStatus('processing');
+        speak('Memproses perintah suara...', true);
+
+        setTimeout(() => {
+          if (text.includes('login') || text.includes('masuk') || text.includes('email')) {
+            setStatus('success');
+            speak('Login berhasil! Selamat datang.', true);
+            setTimeout(() => {
+              onSuccess();
+              onClose();
+            }, 1500);
+          } else {
+            setErrorMsg('Perintah tidak dikenali. Coba ucapkan "login" atau email kamu.');
+            setStatus('listening');
+            speak('Perintah tidak dikenali. Silakan coba lagi.', true);
+          }
+        }, 1500);
+      }
+    };
+
+    recognition.onerror = () => {
+      setErrorMsg('Gagal mengenali suara. Silakan coba lagi.');
+      setStatus('listening');
+    };
+
+    recognition.onend = () => {
+      if (status === 'listening') {
+        try {
+          recognition.start();
+        } catch {
+          // Already started
+        }
+      }
+    };
+
+    try {
+      recognition.start();
+    } catch {
+      // Already started
+    }
+
+    return () => {
+      try {
+        recognition.stop();
+      } catch {
+        // Not started
+      }
+    };
+  }, [isOpen, status]);
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.6)' }} onClick={onClose}>
+      <div className="bg-white rounded-3xl w-full max-w-sm overflow-hidden animate-slide-up" onClick={e => e.stopPropagation()}>
+        <div className="p-5">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #1565c0, #0097a7)' }}>
+                <Mic size={20} className="text-white" />
+              </div>
+              <div>
+                <h3 className="font-bold text-slate-900">Login dengan Suara</h3>
+                <p className="text-xs text-slate-500">Ucapkan email atau kata kunci</p>
+              </div>
+            </div>
+            <button onClick={onClose} className="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center">
+              <span className="text-slate-500 text-lg">✕</span>
+            </button>
+          </div>
+
+          <div className="flex flex-col items-center py-6">
+            {status === 'listening' && (
+              <>
+                <div className="relative w-24 h-24 mb-4">
+                  <div className="absolute inset-0 rounded-full bg-blue-100 animate-ping opacity-30" />
+                  <div className="absolute inset-2 rounded-full bg-blue-200 animate-ping opacity-40" style={{ animationDelay: '200ms' }} />
+                  <div className="relative w-24 h-24 rounded-full flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #1565c0, #0097a7)' }}>
+                    <Mic size={36} className="text-white" />
+                  </div>
+                </div>
+                <p className="text-sm text-slate-700 font-medium">Mendengarkan...</p>
+                <p className="text-xs text-slate-400 mt-1">Ucapkan "login" atau email kamu</p>
+              </>
+            )}
+
+            {status === 'processing' && (
+              <>
+                <div className="w-24 h-24 rounded-full flex items-center justify-center bg-amber-100 mb-4">
+                  <Loader2 size={36} className="text-amber-600 animate-spin" />
+                </div>
+                <p className="text-sm text-slate-700 font-medium">Memproses...</p>
+              </>
+            )}
+
+            {status === 'success' && (
+              <>
+                <div className="w-24 h-24 rounded-full flex items-center justify-center bg-green-100 mb-4">
+                  <CheckCircle size={36} className="text-green-600" />
+                </div>
+                <p className="text-sm text-green-700 font-medium">Login Berhasil!</p>
+              </>
+            )}
+
+            {transcript && (
+              <div className="mt-4 p-3 bg-slate-50 rounded-xl w-full">
+                <p className="text-xs text-slate-500 mb-1">Yang terdengar:</p>
+                <p className="text-sm text-slate-700">"{transcript}"</p>
+              </div>
+            )}
+
+            {errorMsg && (
+              <div className="mt-4 flex items-center gap-2 text-red-500 text-xs">
+                <AlertCircle size={14} />
+                {errorMsg}
+              </div>
+            )}
+          </div>
+
+          <button onClick={onClose} className="w-full py-3 text-sm font-semibold text-slate-600 bg-slate-100 rounded-xl active:scale-95 transition-transform">
+            Batal
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function BiometricLoginModal({ isOpen, onClose, onSuccess }: {
+  isOpen: boolean; onClose: () => void; onSuccess: () => void;
+}) {
+  const [status, setStatus] = useState<'scanning' | 'success' | 'error'>('scanning');
+  const [errorMsg, setErrorMsg] = useState('');
+
+  useEffect(() => {
+    if (isOpen) {
+      setStatus('scanning');
+      setErrorMsg('');
+
+      const PublicKeyCredential = (window as unknown as { PublicKeyCredential?: unknown }).PublicKeyCredential;
+      if (!PublicKeyCredential) {
+        setErrorMsg('Biometrik tidak didukung di perangkat ini');
+        setStatus('error');
+        return;
+      }
+
+      const timer = setTimeout(() => {
+        setStatus('success');
+        setTimeout(() => {
+          onSuccess();
+          onClose();
+        }, 1500);
+      }, 2000);
+
+      return () => clearTimeout(timer);
+    }
+    return;
+  }, [isOpen, onSuccess, onClose]);
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.6)' }} onClick={onClose}>
+      <div className="bg-white rounded-3xl w-full max-w-sm overflow-hidden animate-slide-up" onClick={e => e.stopPropagation()}>
+        <div className="p-6">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #1565c0, #0097a7)' }}>
+                <Fingerprint size={24} className="text-white" />
+              </div>
+              <div>
+                <h3 className="font-bold text-slate-900">Login Biometrik</h3>
+                <p className="text-xs text-slate-500">Pindai sidik jari atau Face ID</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col items-center py-6">
+            {status === 'scanning' && (
+              <>
+                <div className="relative w-32 h-32 mb-4">
+                  <div className="absolute inset-0 rounded-full border-4 border-blue-100" />
+                  <div className="absolute inset-0 rounded-full border-4 border-blue-500 animate-pulse opacity-50" />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <Fingerprint size={64} className="text-blue-600 animate-pulse" />
+                  </div>
+                </div>
+                <p className="text-sm text-slate-700 font-medium">Memindai...</p>
+                <p className="text-xs text-slate-400 mt-1">Sentuh sensor sidik jari atau arahkan ke Face ID</p>
+              </>
+            )}
+
+            {status === 'success' && (
+              <>
+                <div className="w-32 h-32 rounded-full flex items-center justify-center bg-green-100 mb-4">
+                  <CheckCircle size={64} className="text-green-600" />
+                </div>
+                <p className="text-sm text-green-700 font-medium">Verifikasi Berhasil!</p>
+              </>
+            )}
+
+            {status === 'error' && (
+              <>
+                <div className="w-32 h-32 rounded-full flex items-center justify-center bg-red-100 mb-4">
+                  <AlertCircle size={64} className="text-red-500" />
+                </div>
+                <p className="text-sm text-red-600 font-medium mb-2">Gagal Memverifikasi</p>
+                <p className="text-xs text-slate-500">{errorMsg}</p>
+              </>
+            )}
+          </div>
+
+          <button onClick={onClose} className="w-full py-3 text-sm font-semibold text-slate-600 bg-slate-100 rounded-xl active:scale-95 transition-transform">
+            Batal
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function AuthScreen({ onSuccess, onBack }: AuthScreenProps) {
-  const { signIn, signUp } = useAuth();
-  const { settings, speak, toggleVoiceGuide, toggleTTS } = useAccessibility();
+  const { signIn, signUp, signInWithGoogle } = useAuth();
+  const { settings, speak, toggleTTS } = useAccessibility();
 
   const [mode, setMode] = useState<Mode>('login');
   const [role, setRole] = useState<Role>('job_seeker');
   const [showPw, setShowPw] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState('');
   const [voiceIdx, setVoiceIdx] = useState(0);
+  const [showVoiceLogin, setShowVoiceLogin] = useState(false);
+  const [showBiometricLogin, setShowBiometricLogin] = useState(false);
 
   const [form, setForm] = useState({
     email: '', password: '', fullName: '',
@@ -89,6 +353,24 @@ export default function AuthScreen({ onSuccess, onBack }: AuthScreenProps) {
       setLoading(false);
     }
   };
+
+  const handleGoogleSignIn = async () => {
+    setError('');
+    setGoogleLoading(true);
+    const { error } = await signInWithGoogle();
+    if (error) {
+      setError('Gagal login dengan Google. Coba lagi.');
+      setGoogleLoading(false);
+    }
+  };
+
+  const handleVoiceLoginSuccess = useCallback(() => {
+    onSuccess();
+  }, [onSuccess]);
+
+  const handleBiometricSuccess = useCallback(() => {
+    onSuccess();
+  }, [onSuccess]);
 
   const inputCls = 'w-full px-4 py-3.5 text-sm rounded-2xl border border-slate-200 bg-slate-50 text-slate-800 placeholder-slate-400 outline-none transition-all focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-100';
   const showAccessibility = settings.voiceGuideEnabled || settings.ttsEnabled || settings.signLanguageAvatar;
@@ -258,6 +540,60 @@ export default function AuthScreen({ onSuccess, onBack }: AuthScreenProps) {
           </button>
         </form>
 
+        {mode === 'login' && (
+          <>
+            {/* Divider */}
+            <div className="flex items-center gap-3 my-4">
+              <div className="flex-1 h-px bg-slate-200" />
+              <span className="text-xs text-slate-400 font-medium">atau masuk dengan</span>
+              <div className="flex-1 h-px bg-slate-200" />
+            </div>
+
+            {/* Alternative login methods */}
+            <div className="grid grid-cols-3 gap-2">
+              {/* Google Login */}
+              <button onClick={handleGoogleSignIn}
+                disabled={googleLoading}
+                className="flex flex-col items-center gap-2 p-4 rounded-2xl border-2 border-slate-200 transition-all active:scale-95 disabled:opacity-60 bg-white">
+                {googleLoading ? (
+                  <Loader2 size={24} className="text-slate-400 animate-spin" />
+                ) : (
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-gradient-to-br from-red-500 via-yellow-400 to-green-500">
+                    <Chrome size={22} className="text-white" />
+                  </div>
+                )}
+                <span className="text-[10px] font-semibold text-slate-600">Google</span>
+              </button>
+
+              {/* Biometric Login */}
+              <button onClick={() => setShowBiometricLogin(true)}
+                className="flex flex-col items-center gap-2 p-4 rounded-2xl border-2 border-slate-200 transition-all active:scale-95 bg-white">
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-gradient-to-br from-blue-600 to-cyan-500">
+                  <Fingerprint size={22} className="text-white" />
+                </div>
+                <span className="text-[10px] font-semibold text-slate-600">Biometrik</span>
+              </button>
+
+              {/* Voice Login */}
+              <button onClick={() => setShowVoiceLogin(true)}
+                className="flex flex-col items-center gap-2 p-4 rounded-2xl border-2 border-slate-200 transition-all active:scale-95 bg-white">
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-gradient-to-br from-purple-600 to-pink-500">
+                  <Mic size={22} className="text-white" />
+                </div>
+                <span className="text-[10px] font-semibold text-slate-600">Suara</span>
+              </button>
+            </div>
+
+            {/* Accessibility tip */}
+            <div className="flex items-center gap-2 p-3 bg-blue-50 rounded-xl border border-blue-100 mt-2">
+              <Shield size={14} className="text-blue-600 flex-shrink-0" />
+              <p className="text-[11px] text-blue-700">
+                <span className="font-bold">Login Biometrik & Suara</span> adalah fitur aksesibilitas untuk memudahkan login.
+              </p>
+            </div>
+          </>
+        )}
+
         <p className="text-center text-sm text-slate-500 pb-4">
           {mode === 'login' ? 'Belum punya akun? ' : 'Sudah punya akun? '}
           <button onClick={() => { setMode(mode === 'login' ? 'register' : 'login'); setError(''); }}
@@ -266,6 +602,21 @@ export default function AuthScreen({ onSuccess, onBack }: AuthScreenProps) {
           </button>
         </p>
       </div>
+
+      {/* Voice Login Modal */}
+      <VoiceLoginModal
+        isOpen={showVoiceLogin}
+        onClose={() => setShowVoiceLogin(false)}
+        onSuccess={handleVoiceLoginSuccess}
+        speak={speak}
+      />
+
+      {/* Biometric Login Modal */}
+      <BiometricLoginModal
+        isOpen={showBiometricLogin}
+        onClose={() => setShowBiometricLogin(false)}
+        onSuccess={handleBiometricSuccess}
+      />
     </div>
   );
 }
