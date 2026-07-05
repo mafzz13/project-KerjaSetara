@@ -7,6 +7,19 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export type UserRole = 'job_seeker' | 'employer';
 
+export interface Skill {
+  name: string;
+  level: number; // 0-100
+}
+
+export interface WorkExperience {
+  id: string;
+  title: string;
+  company: string;
+  period: string;
+  description: string;
+}
+
 export interface Profile {
   id: string;
   full_name: string;
@@ -18,6 +31,10 @@ export interface Profile {
   avatar_url?: string;
   phone?: string;
   location?: string;
+  job_title?: string;
+  available_for_work?: boolean;
+  skills?: Skill[];
+  work_experience?: WorkExperience[];
   created_at: string;
   updated_at: string;
 }

@@ -1,16 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import {
   Search, MapPin, Clock, DollarSign, CheckCircle, XCircle, Eye,
   Send, Star, BookOpen, X, AlertCircle, Loader2, ChevronRight,
   Bell, Zap, Users, LogOut, Phone,
   Flame, Trophy, Target, Plus, ShoppingBag, Sparkles, ExternalLink,
-  Pencil, Save, User, Mail
+  Pencil, Save, User, Mail, Mic, Keyboard, Volume2, Award, Briefcase,
+  PlusCircle, Trash2, ToggleLeft, ToggleRight
 } from 'lucide-react';
 import ScreenHeader from '../components/ScreenHeader';
 import {
   supabase, Job, Application, TrainingModule, Enrollment,
   UserGamification, DailyChallenge, ChallengeCompletion, MarketplaceListing,
-  calcLevel, xpProgressInLevel, getMatchScore
+  calcLevel, xpProgressInLevel, getMatchScore, Skill, WorkExperience
 } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { useAccessibility } from '../contexts/AccessibilityContext';
@@ -171,44 +172,61 @@ function JobDetailSheet({ job, applied, matchScore, onClose, onApply }: { job: J
 }
 
 /* ─── HOME SCREEN ─── */
-function HomeScreen({ jobs, applications, enrollments, gamification, onJobPress, onTabChange }: {
+function HomeScreen({ jobs, applications, enrollments, gamification, onJobPress, onTabChange, onApply }: {
   jobs: Job[]; applications: Application[]; enrollments: Enrollment[];
-  gamification: UserGamification | null; onJobPress: (j: Job) => void; onTabChange: (t: string) => void;
+  gamification: UserGamification | null; onJobPress: (j: Job) => void;
+  onTabChange: (t: string) => void; onApply: (j: Job) => void;
 }) {
-  const { profile } = useAuth();
-  const { settings } = useAccessibility();
+  const { profile, user } = useAuth();
+  const { settings, speak } = useAccessibility();
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Selamat Pagi' : hour < 17 ? 'Selamat Siang' : 'Selamat Malam';
   const appliedIds = new Set(applications.map(a => a.job_id));
   const topJobs = jobs.slice(0, 3);
+  const completedEnrollments = enrollments.filter(e => e.completed).length;
+  const dbBadges: string[] = gamification?.badges ?? [];
+  const avgMatchScore = jobs.length > 0
+    ? Math.round(jobs.slice(0, 5).reduce((acc, j) => acc + getMatchScore(j, profile?.disability_type), 0) / Math.min(5, jobs.length))
+    : 70;
 
   return (
     <div className="flex-1 overflow-y-auto">
-      <div className="relative px-5 pt-12 pb-8 overflow-hidden"
-        style={{ background: 'linear-gradient(160deg, #1e40af 0%, #3b82f6 100%)' }}>
+      {/* Header */}
+      <div className="relative px-5 pt-12 pb-6 overflow-hidden"
+        style={{ background: 'linear-gradient(160deg, #1e40af 0%, #3b82f6 85%, #0ea5e9 100%)' }}>
         <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(255,255,255,0.4) 1px, transparent 0)', backgroundSize: '28px 28px' }} />
-        <div className="relative z-10 flex items-start justify-between mb-5">
-          <div>
-            <p className="text-blue-200 text-sm">{greeting},</p>
-            <h1 className="text-xl font-bold text-white mt-0.5">{profile?.full_name?.split(' ')[0] || 'Pengguna'} 👋</h1>
-            {profile?.disability_type && (
-              <span className="inline-block bg-white/15 text-white text-xs font-medium px-2.5 py-1 rounded-full mt-1.5">
-                ♿ {profile.disability_type}
-              </span>
-            )}
+
+        <div className="relative z-10 flex items-start gap-4 mb-5">
+          {/* Avatar */}
+          <div className="w-16 h-16 rounded-2xl bg-white/20 border-2 border-white/40 flex items-center justify-center text-white text-2xl font-bold flex-shrink-0">
+            {profile?.full_name?.[0]?.toUpperCase() || 'U'}
           </div>
-          <div className="flex flex-col items-end gap-2">
+          <div className="flex-1 min-w-0">
+            <p className="text-blue-200 text-xs font-medium">{greeting},</p>
+            <h1 className="text-xl font-bold text-white leading-tight">
+              <span className="font-normal">Selamat datang kembali, </span>
+              <span>{profile?.full_name?.split(' ')[0] || 'Pengguna'}!</span>
+            </h1>
+            <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+              <span className="flex items-center gap-1 bg-green-400/20 border border-green-400/30 text-green-200 text-[10px] font-bold px-2 py-0.5 rounded-full">
+                <Sparkles size={8} /> Matching {avgMatchScore}%
+              </span>
+              {(profile?.job_title || profile?.disability_type) && (
+                <span className="text-[10px] text-blue-200">
+                  {profile?.job_title || ''}
+                  {profile?.job_title && profile?.location ? ' | ' : ''}
+                  {profile?.location || ''}
+                </span>
+              )}
+            </div>
+          </div>
+          <div className="flex flex-col items-end gap-2 flex-shrink-0">
             <div className="w-10 h-10 rounded-2xl bg-white/10 flex items-center justify-center">
               <Bell size={18} className="text-white" />
             </div>
-            {settings.signLanguageAvatar && (
-              <div className="bg-teal-400/20 border border-teal-400/30 rounded-xl px-2 py-1 text-center">
-                <span className="text-xl">🤟</span>
-                <p className="text-[9px] text-teal-200 font-bold">BISINDO</p>
-              </div>
-            )}
           </div>
         </div>
+
         <button onClick={() => onTabChange('jobs')}
           className="relative z-10 w-full flex items-center gap-3 bg-white rounded-2xl px-4 py-3 shadow-lg active:scale-[0.98] transition-transform">
           <Search size={16} className="text-slate-400 flex-shrink-0" />
@@ -234,88 +252,148 @@ function HomeScreen({ jobs, applications, enrollments, gamification, onJobPress,
             </div>
           </div>
           {gamification.streak_days > 0 && (
-            <div className="flex items-center gap-1 flex-shrink-0"><Flame size={16} className="text-orange-500" /><span className="text-xs font-bold text-orange-600">{gamification.streak_days}</span></div>
+            <div className="flex items-center gap-1 flex-shrink-0"><Flame size={16} className="text-orange-500" /><span className="text-xs font-bold text-orange-600">{gamification.streak_days}🔥</span></div>
           )}
         </div>
       )}
 
-      {/* Stats */}
-      <div className="px-4 py-4 grid grid-cols-3 gap-3">
-        {[
-          { label: 'Lamaran', value: applications.length, color: '#3b82f6' },
-          { label: 'Proses', value: applications.filter(a => ['reviewed', 'interview'].includes(a.status)).length, color: '#7c3aed' },
-          { label: 'Pelatihan', value: enrollments.length, color: '#06b6d4' },
-        ].map(s => (
-          <div key={s.label} className="bg-white rounded-2xl p-3 shadow-card text-center">
-            <div className="text-2xl font-bold" style={{ color: s.color }}>{s.value}</div>
-            <div className="text-[10px] text-slate-500 font-medium mt-0.5">{s.label}</div>
-          </div>
-        ))}
-      </div>
-
-      <div className="px-4 space-y-6 pb-6">
-        {/* Quick actions */}
+      <div className="px-4 py-4 space-y-5 pb-6">
+        {/* Statistik Saya */}
         <div>
-          <h2 className="text-sm font-bold text-slate-700 mb-3">Aksi Cepat</h2>
-          <div className="grid grid-cols-2 gap-3">
+          <h2 className="text-sm font-bold text-slate-700 mb-3">Statistik Saya</h2>
+          <div className="grid grid-cols-3 gap-3">
             {[
-              { icon: Sparkles, label: 'AI Job Match', sub: 'Rekomendasi pintarku', tab: 'jobs', grad: ['#3b82f6','#1d4ed8'] },
-              { icon: BookOpen, label: 'Game Training', sub: 'Kumpul XP & badge', tab: 'training', grad: ['#06b6d4','#0891b2'] },
-              { icon: ShoppingBag, label: 'Marketplace', sub: 'Jual jasa & portfolio', tab: 'market', grad: ['#7c3aed','#5b21b6'] },
-              { icon: Trophy, label: 'Leaderboard', sub: `Level ${gamification ? calcLevel(gamification.xp) : 1}`, tab: 'training', grad: ['#d97706','#b45309'] },
-            ].map(({ icon: Icon, label, sub, tab, grad }) => (
-              <button key={label} onClick={() => onTabChange(tab)}
-                className="flex items-center gap-3 p-4 rounded-2xl text-white active:scale-95 transition-transform shadow-sm"
-                style={{ background: `linear-gradient(135deg, ${grad[0]}, ${grad[1]})` }}>
-                <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0"><Icon size={18} className="text-white" /></div>
-                <div className="text-left min-w-0">
-                  <p className="text-xs font-bold leading-tight">{label}</p>
-                  <p className="text-[10px] text-white/70 mt-0.5">{sub}</p>
+              { label: 'Lamaran\nTerkirim', value: applications.length, color: '#3b82f6', bg: '#eff6ff', icon: Send },
+              { label: 'Kursus\nSelesai', value: completedEnrollments, color: '#d97706', bg: '#fffbeb', icon: Award },
+              { label: 'Sertifikat\nDiraih', value: dbBadges.length, color: '#059669', bg: '#f0fdf4', icon: Trophy },
+            ].map(s => (
+              <div key={s.label} className="bg-white rounded-2xl p-3 shadow-card text-center border border-slate-50">
+                <div className="w-9 h-9 rounded-xl mx-auto mb-2 flex items-center justify-center" style={{ background: s.bg }}>
+                  <s.icon size={16} style={{ color: s.color }} />
                 </div>
+                <div className="text-xl font-bold" style={{ color: s.color }}>{s.value}</div>
+                <div className="text-[10px] text-slate-500 font-medium mt-0.5 leading-tight whitespace-pre-line">{s.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Assistive Tools */}
+        <div>
+          <h2 className="text-sm font-bold text-slate-700 mb-3">Assistive Tools</h2>
+          <div className="bg-white rounded-2xl shadow-card border border-slate-50 overflow-hidden">
+            {[
+              { icon: Volume2, label: 'AI Voice Reader', desc: 'Bacakan konten halaman', action: () => speak('AI Voice Reader aktif. Saya akan membacakan konten untuk kamu.', true), color: '#3b82f6' },
+              { icon: Mic, label: 'Voice Command', desc: 'Navigasi dengan suara', action: () => speak('Mode perintah suara siap.', true), color: '#7c3aed' },
+              { icon: Keyboard, label: 'Keyboard Aksesibilitas', desc: 'Navigasi keyboard penuh', action: () => speak('Keyboard aksesibilitas aktif.', true), color: '#059669' },
+            ].map(({ icon: Icon, label, desc, action, color }, i) => (
+              <button key={label} onClick={action}
+                className={`w-full flex items-center gap-3 px-4 py-3.5 active:bg-slate-50 transition-colors text-left ${i < 2 ? 'border-b border-slate-100' : ''}`}>
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                  style={{ background: color + '15' }}>
+                  <Icon size={18} style={{ color }} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-bold text-slate-800">{label}</p>
+                  <p className="text-xs text-slate-400">{desc}</p>
+                </div>
+                <ChevronRight size={16} className="text-slate-300" />
               </button>
             ))}
           </div>
         </div>
 
-        {/* AI recommended jobs */}
+        {/* Lowongan Cocok untuk Anda */}
         {topJobs.length > 0 && (
           <div>
             <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-2">
-                <Sparkles size={14} className="text-blue-600" />
-                <h2 className="text-sm font-bold text-slate-700">AI Rekomendasi</h2>
-              </div>
+              <h2 className="text-sm font-bold text-slate-700">Lowongan Cocok untuk Anda</h2>
               <button onClick={() => onTabChange('jobs')} className="flex items-center gap-1 text-xs text-blue-600 font-semibold">Lihat semua <ChevronRight size={14} /></button>
             </div>
-            <div className="space-y-3">
-              {topJobs.map(job => {
+            <div className="bg-white rounded-2xl shadow-card border border-slate-50 overflow-hidden">
+              {topJobs.map((job, i) => {
                 const score = getMatchScore(job, profile?.disability_type);
+                const isApplied = appliedIds.has(job.id);
                 return (
-                  <button key={job.id} onClick={() => onJobPress(job)}
-                    className="w-full bg-white rounded-2xl p-4 shadow-card text-left active:scale-[0.98] transition-transform border border-slate-50">
-                    <div className="flex items-start gap-3">
+                  <div key={job.id} className={`flex items-center gap-3 px-4 py-3.5 ${i < topJobs.length - 1 ? 'border-b border-slate-100' : ''}`}>
+                    <button onClick={() => onJobPress(job)} className="flex items-center gap-3 flex-1 min-w-0 text-left">
                       <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm flex-shrink-0"
                         style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' }}>{job.company_name[0]}</div>
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-start justify-between gap-1 mb-1">
-                          <h3 className="font-semibold text-slate-900 text-sm truncate">{job.title}</h3>
-                          {appliedIds.has(job.id) && <CheckCircle size={14} className="text-green-500 flex-shrink-0" />}
-                        </div>
-                        <p className="text-xs text-slate-500">{job.company_name}</p>
-                        <div className="flex items-center gap-2 mt-2">
-                          <AIMatchBadge score={score} />
-                          <span className="text-[10px] text-slate-400">{job.location}</span>
-                        </div>
-                        <div className="flex flex-wrap gap-1 mt-2">
-                          {job.inclusivity_tags.slice(0, 2).map(t => (
-                            <span key={t} className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${tagColors[t] || 'bg-gray-100 text-gray-600'}`}>{t}</span>
-                          ))}
-                        </div>
+                        <p className="text-sm font-bold text-slate-900 truncate">{job.title}</p>
+                        <p className="text-xs text-slate-500 truncate">{job.company_name} · {job.location}</p>
+                        <span className="inline-block mt-1 text-[10px] font-bold px-2 py-0.5 rounded-full"
+                          style={{ background: score >= 80 ? '#f0fdf4' : '#fffbeb', color: score >= 80 ? '#059669' : '#d97706' }}>
+                          Matching {score}%
+                        </span>
                       </div>
+                    </button>
+                    {isApplied ? (
+                      <div className="flex items-center gap-1 text-green-600 text-xs font-bold flex-shrink-0">
+                        <CheckCircle size={14} /><span>Dilamar</span>
+                      </div>
+                    ) : (
+                      <button onClick={() => onApply(job)}
+                        className="flex-shrink-0 text-xs font-bold text-white px-3 py-2 rounded-xl active:scale-95 transition-transform"
+                        style={{ background: 'linear-gradient(135deg, #3b82f6, #06b6d4)' }}>
+                        Lamar
+                      </button>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Pelatihan Saya */}
+        {enrollments.length > 0 && (
+          <div>
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="text-sm font-bold text-slate-700">Pelatihan Saya</h2>
+              <button onClick={() => onTabChange('training')} className="flex items-center gap-1 text-xs text-blue-600 font-semibold">Lihat semua <ChevronRight size={14} /></button>
+            </div>
+            <div className="flex gap-3 overflow-x-auto pb-1" style={{ scrollbarWidth: 'none' }}>
+              {enrollments.slice(0, 3).map(e => {
+                const mod = e.training_modules;
+                if (!mod) return null;
+                return (
+                  <button key={e.id} onClick={() => onTabChange('training')}
+                    className="flex-shrink-0 w-44 bg-white rounded-2xl p-3.5 shadow-card border border-slate-50 text-left active:scale-[0.98] transition-transform">
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-2 text-white font-bold text-sm"
+                      style={{ background: 'linear-gradient(135deg, #3b82f6, #06b6d4)' }}>
+                      {mod.title[0]}
                     </div>
+                    <p className="text-xs font-bold text-slate-800 leading-tight mb-2 line-clamp-2">{mod.title}</p>
+                    <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                      <div className="h-full rounded-full" style={{ width: `${e.progress}%`, background: 'linear-gradient(90deg, #3b82f6, #06b6d4)' }} />
+                    </div>
+                    <p className="text-[10px] text-slate-400 mt-1">{e.progress}% selesai</p>
                   </button>
                 );
               })}
+            </div>
+          </div>
+        )}
+
+        {/* Sertifikat Saya */}
+        {dbBadges.length > 0 && (
+          <div>
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="text-sm font-bold text-slate-700">Sertifikat Saya</h2>
+            </div>
+            <div className="bg-white rounded-2xl shadow-card border border-slate-50 p-4">
+              <div className="flex flex-wrap gap-2">
+                {dbBadges.map(b => (
+                  <div key={b} className="flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2">
+                    <Award size={16} className="text-amber-500" />
+                    <span className="text-xs font-semibold text-amber-800">{b}</span>
+                  </div>
+                ))}
+              </div>
+              {dbBadges.length === 0 && (
+                <p className="text-xs text-slate-400 text-center py-2">Selesaikan pelatihan untuk mendapatkan sertifikat.</p>
+              )}
             </div>
           </div>
         )}
@@ -789,196 +867,427 @@ function MarketplaceScreen({ listings, myListings, onAddListing }: {
 
 /* ─── PROFILE SCREEN ─── */
 function ProfileScreen({ gamification, onSignOut }: { gamification: UserGamification | null; onSignOut: () => void }) {
-  const { profile, signOut, refreshProfile } = useAuth();
-  const [editing, setEditing] = useState(false);
+  const { profile, user, signOut, refreshProfile } = useAuth();
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({
     full_name: '',
+    job_title: '',
     disability_type: '',
     location: '',
     phone: '',
+    bio: '',
+    available_for_work: false,
+    skills: [] as Skill[],
+    work_experience: [] as WorkExperience[],
   });
+  const [activeSection, setActiveSection] = useState<'view' | 'edit-info' | 'edit-bio' | 'edit-skills' | 'edit-work'>('view');
+  const [newSkill, setNewSkill] = useState({ name: '', level: 80 });
+  const [newWork, setNewWork] = useState({ title: '', company: '', period: '', description: '' });
 
   useEffect(() => {
     if (profile) {
       setForm({
         full_name: profile.full_name || '',
+        job_title: profile.job_title || '',
         disability_type: profile.disability_type || '',
         location: profile.location || '',
         phone: profile.phone || '',
+        bio: profile.bio || '',
+        available_for_work: profile.available_for_work || false,
+        skills: (profile.skills as Skill[]) || [],
+        work_experience: (profile.work_experience as WorkExperience[]) || [],
       });
     }
   }, [profile]);
 
   const handleSignOut = async () => { await signOut(); onSignOut(); };
 
-  const handleSave = async () => {
+  const handleSave = async (fields: Partial<typeof form>) => {
     if (!profile) return;
     setSaving(true);
-    const { error } = await supabase
-      .from('profiles')
-      .update({
-        full_name: form.full_name,
-        disability_type: form.disability_type || null,
-        location: form.location || null,
-        phone: form.phone || null,
-      })
-      .eq('id', profile.id);
-
-    if (!error) {
-      await refreshProfile();
-      setEditing(false);
-    }
+    const updateData: Record<string, unknown> = {};
+    Object.entries(fields).forEach(([k, v]) => { updateData[k] = v === '' ? null : v; });
+    const { error } = await supabase.from('profiles').update(updateData).eq('id', profile.id);
+    if (!error) { await refreshProfile(); setActiveSection('view'); }
     setSaving(false);
   };
 
+  const addSkill = () => {
+    if (!newSkill.name.trim()) return;
+    const updated = [...form.skills, { name: newSkill.name.trim(), level: newSkill.level }];
+    setForm(f => ({ ...f, skills: updated }));
+    setNewSkill({ name: '', level: 80 });
+  };
+
+  const removeSkill = (i: number) => setForm(f => ({ ...f, skills: f.skills.filter((_, idx) => idx !== i) }));
+
+  const addWork = () => {
+    if (!newWork.title.trim() || !newWork.company.trim()) return;
+    const updated: WorkExperience[] = [...form.work_experience, { id: Date.now().toString(), ...newWork }];
+    setForm(f => ({ ...f, work_experience: updated }));
+    setNewWork({ title: '', company: '', period: '', description: '' });
+  };
+
+  const removeWork = (id: string) => setForm(f => ({ ...f, work_experience: f.work_experience.filter(w => w.id !== id) }));
+
   const dbBadges: string[] = gamification?.badges ?? [];
-  const earnedBadges = dbBadges.length > 0 ? dbBadges : [];
   const inputCls = 'w-full px-4 py-3 text-sm rounded-xl border border-slate-200 bg-slate-50 text-slate-800 outline-none transition-all focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-100';
+  const avgMatchScore = 70;
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
-      <ScreenHeader title="Profil Saya" right={
-        editing ? (
-          <button onClick={handleSave} disabled={saving}
+      <ScreenHeader title="Profil" onBack={activeSection !== 'view' ? () => setActiveSection('view') : undefined}
+        right={activeSection === 'view' ? (
+          <button onClick={() => setActiveSection('edit-info')}
             className="flex items-center gap-1.5 text-xs font-bold text-white px-3 py-2 rounded-xl active:scale-95 transition-transform"
             style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' }}>
-            {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
-            {saving ? 'Menyimpan...' : 'Simpan'}
+            <Pencil size={14} /> Edit Profil
           </button>
-        ) : (
-          <button onClick={() => setEditing(true)}
-            className="flex items-center gap-1.5 text-xs font-bold text-blue-600 px-3 py-2 rounded-xl bg-blue-50 active:scale-95 transition-transform">
-            <Pencil size={14} /> Edit
-          </button>
-        )
-      } />
+        ) : saving ? (
+          <Loader2 size={18} className="text-blue-500 animate-spin" />
+        ) : null}
+      />
       <div className="flex-1 overflow-y-auto pb-6">
-        <div className="relative h-32 overflow-hidden" style={{ background: 'linear-gradient(160deg, #1e40af 0%, #3b82f6 100%)' }} />
-        <div className="px-5 -mt-12 mb-6">
+        {/* Banner */}
+        <div className="relative h-28 overflow-hidden" style={{ background: 'linear-gradient(160deg, #1e40af 0%, #3b82f6 100%)' }}>
+          <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(255,255,255,0.4) 1px, transparent 0)', backgroundSize: '24px 24px' }} />
+        </div>
+
+        {/* Avatar + Header Card */}
+        <div className="px-4 -mt-10 mb-4">
           <div className="bg-white rounded-3xl p-5 shadow-card">
             <div className="flex items-start gap-4">
-              <div className="relative">
-                <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-white text-2xl font-bold flex-shrink-0"
+              <div className="relative flex-shrink-0">
+                <div className="w-20 h-20 rounded-2xl flex items-center justify-center text-white text-3xl font-bold border-4 border-white shadow-md"
                   style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' }}>
                   {profile?.full_name?.[0]?.toUpperCase() || 'U'}
                 </div>
                 {gamification && (
-                  <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-lg flex items-center justify-center text-white text-[10px] font-bold"
+                  <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-xl flex items-center justify-center text-white text-xs font-bold shadow"
                     style={{ background: 'linear-gradient(135deg, #d97706, #f59e0b)' }}>
                     {calcLevel(gamification.xp)}
                   </div>
                 )}
               </div>
-              <div className="flex-1 min-w-0 pt-1">
-                <h2 className="font-bold text-slate-900 text-lg leading-tight">{profile?.full_name || 'Pengguna'}</h2>
-                <p className="text-xs text-slate-500 mt-0.5">Pencari Kerja</p>
-                {profile?.disability_type && (
-                  <span className="inline-block bg-blue-50 text-blue-700 text-xs font-semibold px-2.5 py-1 rounded-full mt-2">♿ {profile.disability_type}</span>
+              <div className="flex-1 min-w-0">
+                <h2 className="font-bold text-slate-900 text-xl leading-tight">{profile?.full_name || 'Pengguna'}</h2>
+                {profile?.job_title && (
+                  <p className="text-sm text-slate-500 mt-0.5">
+                    {profile.job_title}{profile.location ? ` | ${profile.location}` : ''}
+                  </p>
                 )}
+                <div className="flex flex-wrap gap-1.5 mt-2">
+                  <span className="flex items-center gap-1 text-[10px] font-bold bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full">
+                    <Sparkles size={8} /> Matching {avgMatchScore}%
+                  </span>
+                  {profile?.disability_type && (
+                    <span className="text-[10px] font-bold bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">
+                      ♿ Adaptive Skills
+                    </span>
+                  )}
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${form.available_for_work ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-500'}`}>
+                    {form.available_for_work ? '✓ Available for Work' : 'Not Available'}
+                  </span>
+                </div>
               </div>
             </div>
 
-            {/* Edit Form */}
-            {editing ? (
-              <div className="mt-4 pt-4 border-t border-slate-100 space-y-3">
-                <div>
-                  <label className="block text-xs font-bold text-slate-500 mb-1.5 ml-1">Nama Lengkap</label>
-                  <div className="relative">
-                    <User size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-                    <input type="text" value={form.full_name} onChange={e => setForm(f => ({ ...f, full_name: e.target.value }))}
-                      placeholder="Nama lengkap" className={`${inputCls} pl-9`} />
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-500 mb-1.5 ml-1">Jenis Disabilitas</label>
-                  <select value={form.disability_type} onChange={e => setForm(f => ({ ...f, disability_type: e.target.value }))}
-                    className={inputCls}>
-                    <option value="">Tidak ada / Tidak ingin menyebutkan</option>
-                    <option value="Disabilitas Netra">Disabilitas Netra</option>
-                    <option value="Disabilitas Rungu">Disabilitas Rungu/Tuli</option>
-                    <option value="Disabilitas Fisik">Disabilitas Fisik/Motorik</option>
-                    <option value="Disabilitas Intelektual">Disabilitas Intelektual</option>
-                    <option value="Disabilitas Mental">Disabilitas Psikososial/Mental</option>
-                    <option value="Disabilitas Ganda">Disabilitas Ganda</option>
-                    <option value="Lainnya">Lainnya</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-500 mb-1.5 ml-1">Lokasi / Kota</label>
-                  <div className="relative">
-                    <MapPin size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-                    <input type="text" value={form.location} onChange={e => setForm(f => ({ ...f, location: e.target.value }))}
-                      placeholder="Jakarta, Bandung, dll." className={`${inputCls} pl-9`} />
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-500 mb-1.5 ml-1">Nomor Telepon</label>
-                  <div className="relative">
-                    <Phone size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-                    <input type="tel" value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
-                      placeholder="08xxxxxxxxxx" className={`${inputCls} pl-9`} />
-                  </div>
-                </div>
-                <button onClick={() => setEditing(false)}
-                  className="w-full py-2.5 text-sm font-medium text-slate-500 bg-slate-100 rounded-xl active:scale-95 transition-transform">
-                  Batal
-                </button>
-              </div>
-            ) : (
-              <>
-                {gamification && (
-                  <div className="mt-4 pt-4 border-t border-slate-100">
-                    <div className="grid grid-cols-3 gap-2 text-center">
-                      {[
-                        { label: 'XP', value: gamification.xp, color: '#d97706' },
-                        { label: 'Coins', value: gamification.coins, color: '#f59e0b' },
-                        { label: 'Streak', value: `${gamification.streak_days}d`, color: '#ef4444' },
-                      ].map(s => (
-                        <div key={s.label} className="bg-slate-50 rounded-xl py-2">
-                          <div className="text-base font-bold" style={{ color: s.color }}>{s.value}</div>
-                          <div className="text-[10px] text-slate-400">{s.label}</div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Badges */}
-                <div className="mt-4 pt-4 border-t border-slate-100">
-                  <p className="text-xs font-bold text-slate-500 mb-2">Badge Diperoleh</p>
-                  {earnedBadges.length > 0 ? (
-                    <div className="flex flex-wrap gap-2">
-                      {earnedBadges.map(b => (
-                        <span key={b} className="text-xs bg-amber-50 text-amber-700 border border-amber-200 px-2.5 py-1 rounded-full font-semibold">{b}</span>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-xs text-slate-400">Selesaikan tantangan harian untuk mendapatkan badge.</p>
-                  )}
-                </div>
-
-                <div className="mt-4 pt-4 border-t border-slate-100 space-y-2">
-                  {[
-                    { icon: MapPin, label: profile?.location || 'Lokasi belum diisi' },
-                    { icon: Phone, label: profile?.phone || 'Nomor belum diisi' },
-                  ].map(({ icon: Icon, label }) => (
-                    <div key={label} className="flex items-center gap-2 text-sm text-slate-500">
-                      <Icon size={14} className="text-slate-300" /> {label}
-                    </div>
-                  ))}
-                </div>
-              </>
-            )}
+            {/* Contact row */}
+            <div className="mt-4 pt-4 border-t border-slate-100 flex flex-wrap gap-x-4 gap-y-1.5">
+              {profile?.location && (
+                <span className="flex items-center gap-1 text-xs text-slate-500"><MapPin size={12} className="text-blue-400" />{profile.location}</span>
+              )}
+              {user?.email && (
+                <span className="flex items-center gap-1 text-xs text-slate-500"><Mail size={12} className="text-blue-400" />{user.email}</span>
+              )}
+              {profile?.phone && (
+                <span className="flex items-center gap-1 text-xs text-slate-500"><Phone size={12} className="text-blue-400" />{profile.phone}</span>
+              )}
+            </div>
           </div>
         </div>
 
-        <div className="px-5">
-          <button onClick={handleSignOut} className="w-full bg-red-50 rounded-2xl p-4 flex items-center gap-3 active:scale-[0.98] transition-transform border border-red-100 mt-2">
-            <div className="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center flex-shrink-0"><LogOut size={18} className="text-red-500" /></div>
-            <div className="flex-1 text-left"><p className="text-sm font-semibold text-red-600">Keluar</p><p className="text-xs text-red-400">Logout dari akun</p></div>
-          </button>
-        </div>
+        {/* EDIT-INFO Section */}
+        {activeSection === 'edit-info' && (
+          <div className="px-4 mb-4">
+            <div className="bg-white rounded-2xl shadow-card p-4 space-y-3">
+              <h3 className="font-bold text-slate-800 text-sm">Edit Informasi Dasar</h3>
+              <div>
+                <label className="block text-xs font-bold text-slate-500 mb-1">Nama Lengkap</label>
+                <div className="relative"><User size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                  <input value={form.full_name} onChange={e => setForm(f => ({ ...f, full_name: e.target.value }))} className={`${inputCls} pl-9`} placeholder="Nama lengkap" /></div>
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-500 mb-1">Jabatan / Profesi</label>
+                <div className="relative"><Briefcase size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                  <input value={form.job_title} onChange={e => setForm(f => ({ ...f, job_title: e.target.value }))} className={`${inputCls} pl-9`} placeholder="Web Developer, Designer, dll." /></div>
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-500 mb-1">Jenis Disabilitas</label>
+                <select value={form.disability_type} onChange={e => setForm(f => ({ ...f, disability_type: e.target.value }))} className={inputCls}>
+                  <option value="">Tidak ada / Tidak ingin menyebutkan</option>
+                  <option value="Disabilitas Netra">Disabilitas Netra</option>
+                  <option value="Disabilitas Rungu">Disabilitas Rungu/Tuli</option>
+                  <option value="Disabilitas Fisik">Disabilitas Fisik/Motorik</option>
+                  <option value="Disabilitas Intelektual">Disabilitas Intelektual</option>
+                  <option value="Disabilitas Mental">Disabilitas Psikososial/Mental</option>
+                  <option value="Disabilitas Ganda">Disabilitas Ganda</option>
+                  <option value="Lainnya">Lainnya</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-500 mb-1">Lokasi</label>
+                <div className="relative"><MapPin size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                  <input value={form.location} onChange={e => setForm(f => ({ ...f, location: e.target.value }))} className={`${inputCls} pl-9`} placeholder="Jakarta, Bandung, dll." /></div>
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-500 mb-1">Telepon</label>
+                <div className="relative"><Phone size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                  <input type="tel" value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} className={`${inputCls} pl-9`} placeholder="08xxxxxxxxxx" /></div>
+              </div>
+              <div className="flex items-center justify-between p-3 bg-slate-50 rounded-xl">
+                <div>
+                  <p className="text-sm font-semibold text-slate-800">Available for Work</p>
+                  <p className="text-xs text-slate-400">Tampilkan status ke perusahaan</p>
+                </div>
+                <button onClick={() => setForm(f => ({ ...f, available_for_work: !f.available_for_work }))}
+                  className={`relative w-11 h-6 rounded-full transition-colors ${form.available_for_work ? 'bg-green-500' : 'bg-slate-200'}`}>
+                  <span className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${form.available_for_work ? 'translate-x-5' : 'translate-x-0.5'}`} />
+                </button>
+              </div>
+              <div className="flex gap-2 pt-1">
+                <button onClick={() => setActiveSection('view')} className="flex-1 py-3 text-sm font-medium text-slate-500 bg-slate-100 rounded-xl active:scale-95 transition-transform">Batal</button>
+                <button onClick={() => handleSave({ full_name: form.full_name, job_title: form.job_title, disability_type: form.disability_type, location: form.location, phone: form.phone, available_for_work: form.available_for_work })}
+                  disabled={saving}
+                  className="flex-1 py-3 text-sm font-bold text-white rounded-xl active:scale-95 transition-transform flex items-center justify-center gap-2"
+                  style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' }}>
+                  {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />} Simpan
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* MAIN VIEW */}
+        {activeSection === 'view' && (
+          <div className="px-4 space-y-4">
+            {/* Tentang Saya */}
+            <div className="bg-white rounded-2xl shadow-card p-4">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="font-bold text-blue-700 text-sm">Tentang Saya</h3>
+                <button onClick={() => setActiveSection('edit-bio')} className="text-xs text-blue-500 font-semibold flex items-center gap-1"><Pencil size={12} />Edit</button>
+              </div>
+              {profile?.bio ? (
+                <p className="text-sm text-slate-600 leading-relaxed">{profile.bio}</p>
+              ) : (
+                <button onClick={() => setActiveSection('edit-bio')} className="w-full py-4 border-2 border-dashed border-slate-200 rounded-xl text-xs text-slate-400 font-medium">
+                  + Tambah bio / deskripsi diri
+                </button>
+              )}
+            </div>
+
+            {/* Keterampilan Saya */}
+            <div className="bg-white rounded-2xl shadow-card p-4">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="font-bold text-blue-700 text-sm">Keterampilan Saya</h3>
+                <button onClick={() => setActiveSection('edit-skills')} className="text-xs text-blue-500 font-semibold flex items-center gap-1"><Pencil size={12} />Edit</button>
+              </div>
+              {form.skills.length > 0 ? (
+                <div className="space-y-3">
+                  {form.skills.map((skill, i) => (
+                    <div key={i}>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs font-bold text-slate-700">{skill.name}</span>
+                        <span className="text-xs font-bold" style={{ color: '#3b82f6' }}>{skill.level}%</span>
+                      </div>
+                      <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+                        <div className="h-full rounded-full transition-all" style={{ width: `${skill.level}%`, background: 'linear-gradient(90deg, #3b82f6, #06b6d4)' }} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <button onClick={() => setActiveSection('edit-skills')} className="w-full py-4 border-2 border-dashed border-slate-200 rounded-xl text-xs text-slate-400 font-medium">
+                  + Tambah keterampilan
+                </button>
+              )}
+            </div>
+
+            {/* Riwayat Pekerjaan */}
+            <div className="bg-white rounded-2xl shadow-card p-4">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="font-bold text-blue-700 text-sm">Riwayat Pekerjaan</h3>
+                <button onClick={() => setActiveSection('edit-work')} className="text-xs text-blue-500 font-semibold flex items-center gap-1"><Pencil size={12} />Edit</button>
+              </div>
+              {form.work_experience.length > 0 ? (
+                <div className="space-y-3">
+                  {form.work_experience.map(w => (
+                    <div key={w.id} className="flex items-start gap-3 p-3 bg-slate-50 rounded-xl">
+                      <div className="w-9 h-9 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0">
+                        <Briefcase size={16} className="text-blue-600" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-bold text-slate-900">{w.title}</p>
+                        <p className="text-xs text-slate-500">{w.company}{w.period ? ` · ${w.period}` : ''}</p>
+                        {w.description && <p className="text-xs text-slate-400 mt-1 leading-relaxed">- {w.description}</p>}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <button onClick={() => setActiveSection('edit-work')} className="w-full py-4 border-2 border-dashed border-slate-200 rounded-xl text-xs text-slate-400 font-medium">
+                  + Tambah riwayat pekerjaan
+                </button>
+              )}
+            </div>
+
+            {/* Sertifikasi */}
+            {dbBadges.length > 0 && (
+              <div className="bg-white rounded-2xl shadow-card p-4">
+                <h3 className="font-bold text-blue-700 text-sm mb-3">Sertifikasi</h3>
+                <div className="grid grid-cols-2 gap-2">
+                  {dbBadges.map(b => (
+                    <div key={b} className="flex items-center gap-2 p-3 bg-amber-50 border border-amber-200 rounded-xl">
+                      <Award size={18} className="text-amber-500 flex-shrink-0" />
+                      <span className="text-xs font-semibold text-amber-800 leading-tight">{b}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* XP Stats */}
+            {gamification && (
+              <div className="bg-white rounded-2xl shadow-card p-4">
+                <h3 className="font-bold text-slate-700 text-sm mb-3">Statistik Gamifikasi</h3>
+                <div className="grid grid-cols-3 gap-2 text-center">
+                  {[
+                    { label: 'XP', value: gamification.xp, color: '#d97706' },
+                    { label: 'Coins', value: gamification.coins, color: '#f59e0b' },
+                    { label: 'Streak', value: `${gamification.streak_days}d`, color: '#ef4444' },
+                  ].map(s => (
+                    <div key={s.label} className="bg-slate-50 rounded-xl py-3">
+                      <div className="text-lg font-bold" style={{ color: s.color }}>{s.value}</div>
+                      <div className="text-[10px] text-slate-400">{s.label}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <button onClick={handleSignOut} className="w-full bg-red-50 rounded-2xl p-4 flex items-center gap-3 active:scale-[0.98] transition-transform border border-red-100">
+              <div className="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center flex-shrink-0"><LogOut size={18} className="text-red-500" /></div>
+              <div className="flex-1 text-left"><p className="text-sm font-semibold text-red-600">Keluar</p><p className="text-xs text-red-400">Logout dari akun</p></div>
+            </button>
+          </div>
+        )}
+
+        {/* EDIT BIO */}
+        {activeSection === 'edit-bio' && (
+          <div className="px-4 mb-4">
+            <div className="bg-white rounded-2xl shadow-card p-4 space-y-3">
+              <h3 className="font-bold text-slate-800 text-sm">Tentang Saya</h3>
+              <textarea value={form.bio} onChange={e => setForm(f => ({ ...f, bio: e.target.value }))}
+                rows={5} className={`${inputCls} resize-none`}
+                placeholder="Ceritakan sedikit tentang dirimu, pengalaman, dan tujuan karirmu..." />
+              <div className="flex gap-2">
+                <button onClick={() => setActiveSection('view')} className="flex-1 py-3 text-sm font-medium text-slate-500 bg-slate-100 rounded-xl">Batal</button>
+                <button onClick={() => handleSave({ bio: form.bio })} disabled={saving}
+                  className="flex-1 py-3 text-sm font-bold text-white rounded-xl flex items-center justify-center gap-2"
+                  style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' }}>
+                  {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />} Simpan
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* EDIT SKILLS */}
+        {activeSection === 'edit-skills' && (
+          <div className="px-4 mb-4">
+            <div className="bg-white rounded-2xl shadow-card p-4 space-y-4">
+              <h3 className="font-bold text-slate-800 text-sm">Keterampilan Saya</h3>
+              {form.skills.map((skill, i) => (
+                <div key={i} className="flex items-center gap-3">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-xs font-bold text-slate-700">{skill.name}</span>
+                      <span className="text-xs text-blue-600 font-bold">{skill.level}%</span>
+                    </div>
+                    <input type="range" min={10} max={100} value={skill.level}
+                      onChange={e => { const s = [...form.skills]; s[i] = { ...s[i], level: +e.target.value }; setForm(f => ({ ...f, skills: s })); }}
+                      className="w-full h-2 rounded-full accent-blue-500" />
+                  </div>
+                  <button onClick={() => removeSkill(i)} className="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center flex-shrink-0">
+                    <Trash2 size={14} className="text-red-500" />
+                  </button>
+                </div>
+              ))}
+              <div className="border-t border-slate-100 pt-3 space-y-2">
+                <p className="text-xs font-bold text-slate-500">Tambah Keterampilan</p>
+                <div className="flex gap-2">
+                  <input value={newSkill.name} onChange={e => setNewSkill(s => ({ ...s, name: e.target.value }))}
+                    placeholder="Nama skill" className="flex-1 px-3 py-2 text-sm rounded-xl border border-slate-200 bg-slate-50 outline-none focus:border-blue-400" />
+                  <input type="number" min={10} max={100} value={newSkill.level}
+                    onChange={e => setNewSkill(s => ({ ...s, level: Math.min(100, Math.max(10, +e.target.value)) }))}
+                    className="w-16 px-2 py-2 text-sm rounded-xl border border-slate-200 bg-slate-50 outline-none text-center focus:border-blue-400" />
+                  <button onClick={addSkill} className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: 'linear-gradient(135deg, #3b82f6, #06b6d4)' }}>
+                    <PlusCircle size={16} className="text-white" />
+                  </button>
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <button onClick={() => setActiveSection('view')} className="flex-1 py-3 text-sm font-medium text-slate-500 bg-slate-100 rounded-xl">Batal</button>
+                <button onClick={() => handleSave({ skills: form.skills })} disabled={saving}
+                  className="flex-1 py-3 text-sm font-bold text-white rounded-xl flex items-center justify-center gap-2"
+                  style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' }}>
+                  {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />} Simpan
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* EDIT WORK EXPERIENCE */}
+        {activeSection === 'edit-work' && (
+          <div className="px-4 mb-4">
+            <div className="bg-white rounded-2xl shadow-card p-4 space-y-4">
+              <h3 className="font-bold text-slate-800 text-sm">Riwayat Pekerjaan</h3>
+              {form.work_experience.map(w => (
+                <div key={w.id} className="flex items-start gap-3 p-3 bg-slate-50 rounded-xl">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-bold text-slate-900">{w.title}</p>
+                    <p className="text-xs text-slate-500">{w.company}{w.period ? ` · ${w.period}` : ''}</p>
+                    {w.description && <p className="text-xs text-slate-400 mt-1">- {w.description}</p>}
+                  </div>
+                  <button onClick={() => removeWork(w.id)} className="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center flex-shrink-0">
+                    <Trash2 size={14} className="text-red-500" />
+                  </button>
+                </div>
+              ))}
+              <div className="border-t border-slate-100 pt-3 space-y-2">
+                <p className="text-xs font-bold text-slate-500">Tambah Pengalaman</p>
+                <input value={newWork.title} onChange={e => setNewWork(w => ({ ...w, title: e.target.value }))} placeholder="Jabatan / Posisi" className={inputCls} />
+                <input value={newWork.company} onChange={e => setNewWork(w => ({ ...w, company: e.target.value }))} placeholder="Nama perusahaan" className={inputCls} />
+                <input value={newWork.period} onChange={e => setNewWork(w => ({ ...w, period: e.target.value }))} placeholder="Periode (2020 - 2022)" className={inputCls} />
+                <input value={newWork.description} onChange={e => setNewWork(w => ({ ...w, description: e.target.value }))} placeholder="Deskripsi singkat" className={inputCls} />
+                <button onClick={addWork}
+                  className="w-full py-2.5 text-sm font-bold text-white rounded-xl flex items-center justify-center gap-2"
+                  style={{ background: 'linear-gradient(135deg, #3b82f6, #06b6d4)' }}>
+                  <PlusCircle size={15} /> Tambah
+                </button>
+              </div>
+              <div className="flex gap-2">
+                <button onClick={() => setActiveSection('view')} className="flex-1 py-3 text-sm font-medium text-slate-500 bg-slate-100 rounded-xl">Batal</button>
+                <button onClick={() => handleSave({ work_experience: form.work_experience })} disabled={saving}
+                  className="flex-1 py-3 text-sm font-bold text-white rounded-xl flex items-center justify-center gap-2"
+                  style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' }}>
+                  {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />} Simpan
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -1080,7 +1389,7 @@ export default function JobSeekerApp({ activeTab, onTabChange, onSignOut }: {
 
   return (
     <div className="h-full flex flex-col">
-      {activeTab === 'home' && <HomeScreen jobs={jobs} applications={applications} enrollments={enrollments} gamification={gamification} onJobPress={setSelectedJob} onTabChange={onTabChange} />}
+      {activeTab === 'home' && <HomeScreen jobs={jobs} applications={applications} enrollments={enrollments} gamification={gamification} onJobPress={setSelectedJob} onTabChange={onTabChange} onApply={setApplyJob} />}
       {activeTab === 'jobs' && <JobsScreen jobs={jobs} applications={applications} onJobPress={setSelectedJob} />}
       {activeTab === 'training' && <TrainingScreen modules={modules} enrollments={enrollments} gamification={gamification} challenges={challenges} completions={completions} onEnroll={handleEnroll} onCompleteChallenge={handleCompleteChallenge} />}
       {activeTab === 'market' && <MarketplaceScreen listings={listings} myListings={myListings} onAddListing={handleAddListing} />}
