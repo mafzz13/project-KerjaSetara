@@ -153,7 +153,7 @@ function PostJobSheet({ companyName, onClose, onSuccess }: PostJobSheetProps) {
         <div className="px-5 py-4 border-t border-slate-100">
           <button onClick={handleSubmit} disabled={loading}
             className="w-full flex items-center justify-center gap-2 text-white font-bold py-4 rounded-2xl transition-all active:scale-95 disabled:opacity-60 shadow-lg"
-            style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' }}>
+            style={{ background: 'linear-gradient(135deg, #3582B8 0%, #85B6D6 100%)' }}>
             {loading ? <Loader2 size={18} className="animate-spin" /> : <Plus size={18} />}
             {loading ? 'Memposting...' : 'Posting Lowongan'}
           </button>
@@ -172,7 +172,7 @@ function HomeScreen({ jobs, applications, onTabChange, onPostJob }: {
   const companyName = profile?.company_name || profile?.full_name || 'Perusahaan';
 
   const stats = [
-    { label: 'Lowongan Aktif', value: jobs.filter(j => j.is_active).length, color: '#3b82f6', bg: '#eff6ff' },
+    { label: 'Lowongan Aktif', value: jobs.filter(j => j.is_active).length, color: '#3582B8', bg: '#eff6ff' },
     { label: 'Total Pelamar', value: applications.length, color: '#7c3aed', bg: '#f5f3ff' },
     { label: 'Menunggu Review', value: applications.filter(a => a.status === 'pending').length, color: '#d97706', bg: '#fffbeb' },
     { label: 'Diterima', value: applications.filter(a => a.status === 'accepted').length, color: '#059669', bg: '#f0fdf4' },
@@ -182,7 +182,7 @@ function HomeScreen({ jobs, applications, onTabChange, onPostJob }: {
     <div className="flex-1 overflow-y-auto">
       {/* Header */}
       <div className="relative px-5 pt-14 pb-8 overflow-hidden"
-        style={{ background: 'linear-gradient(160deg, #1e40af 0%, #3b82f6 100%)' }}>
+        style={{ background: 'linear-gradient(160deg, #1F3A60 0%, #3582B8 100%)' }}>
         <div className="absolute inset-0 opacity-10"
           style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(255,255,255,0.4) 1px, transparent 0)', backgroundSize: '28px 28px' }} />
         <div className="relative z-10 flex items-start justify-between mb-5">
@@ -203,7 +203,7 @@ function HomeScreen({ jobs, applications, onTabChange, onPostJob }: {
         {/* Post job button */}
         <button onClick={onPostJob}
           className="relative z-10 w-full flex items-center gap-3 bg-white rounded-2xl px-4 py-3 shadow-lg active:scale-[0.98] transition-transform">
-          <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #3b82f6, #06b6d4)' }}>
+          <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #3582B8, #85B6D6)' }}>
             <Plus size={16} className="text-white" />
           </div>
           <span className="text-slate-600 text-sm font-semibold">Posting lowongan baru...</span>
@@ -226,9 +226,9 @@ function HomeScreen({ jobs, applications, onTabChange, onPostJob }: {
           <h2 className="text-sm font-bold text-slate-700 mb-3">Aksi Cepat</h2>
           <div className="grid grid-cols-2 gap-3">
             {[
-              { icon: Plus, label: 'Posting Lowongan', sub: 'Rekrut talenta', action: () => onPostJob(), grad: ['#3b82f6','#1d4ed8'] },
+              { icon: Plus, label: 'Posting Lowongan', sub: 'Rekrut talenta', action: () => onPostJob(), grad: ['#3582B8','#1d4ed8'] },
               { icon: Users, label: 'Lihat Pelamar', sub: `${applications.length} pelamar`, action: () => onTabChange('applicants'), grad: ['#7c3aed','#5b21b6'] },
-              { icon: Briefcase, label: 'Kelola Lowongan', sub: `${jobs.length} lowongan`, action: () => onTabChange('my-jobs'), grad: ['#06b6d4','#0891b2'] },
+              { icon: Briefcase, label: 'Kelola Lowongan', sub: `${jobs.length} lowongan`, action: () => onTabChange('my-jobs'), grad: ['#85B6D6','#0891b2'] },
               { icon: Award, label: 'Profil Perusahaan', sub: 'Informasi bisnis', action: () => onTabChange('profile'), grad: ['#d97706','#b45309'] },
             ].map(({ icon: Icon, label, sub, action, grad }) => (
               <button key={label} onClick={action}
@@ -263,7 +263,7 @@ function HomeScreen({ jobs, applications, onTabChange, onPostJob }: {
                   <div key={app.id} className="bg-white rounded-2xl p-4 shadow-card border border-slate-50">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-2xl flex items-center justify-center text-white font-bold text-sm flex-shrink-0"
-                        style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' }}>
+                        style={{ background: 'linear-gradient(135deg, #3582B8 0%, #85B6D6 100%)' }}>
                         {candidate?.full_name?.[0] || '?'}
                       </div>
                       <div className="flex-1 min-w-0">
@@ -295,7 +295,7 @@ function MyJobsScreen({ jobs, applications, onToggle, onPostJob }: {
       <ScreenHeader title="Lowongan Saya" subtitle={`${jobs.length} lowongan`}
         right={
           <button onClick={onPostJob} className="flex items-center gap-1.5 text-xs font-bold text-white px-3 py-2 rounded-xl active:scale-95 transition-transform"
-            style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' }}>
+            style={{ background: 'linear-gradient(135deg, #3582B8 0%, #85B6D6 100%)' }}>
             <Plus size={14} /> Posting
           </button>
         }
@@ -306,7 +306,7 @@ function MyJobsScreen({ jobs, applications, onToggle, onPostJob }: {
             <Briefcase size={48} className="text-slate-200 mb-3" />
             <p className="text-slate-500 font-semibold">Belum ada lowongan</p>
             <button onClick={onPostJob} className="mt-3 flex items-center gap-2 text-sm font-bold text-white px-5 py-2.5 rounded-2xl active:scale-95 transition-transform"
-              style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' }}>
+              style={{ background: 'linear-gradient(135deg, #3582B8 0%, #85B6D6 100%)' }}>
               <Plus size={16} /> Posting Sekarang
             </button>
           </div>
@@ -381,7 +381,7 @@ function ApplicantsScreen({ applications, onUpdateStatus, updatingId }: {
               <button className="w-full p-4 text-left active:bg-slate-50 transition-colors" onClick={() => setExpandedId(isExpanded ? null : app.id)}>
                 <div className="flex items-start gap-3">
                   <div className="w-11 h-11 rounded-2xl flex items-center justify-center text-white font-bold flex-shrink-0"
-                    style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' }}>
+                    style={{ background: 'linear-gradient(135deg, #3582B8 0%, #85B6D6 100%)' }}>
                     {candidate?.full_name?.[0] || '?'}
                   </div>
                   <div className="flex-1 min-w-0">
@@ -495,7 +495,7 @@ function ProfileScreen({ onSignOut }: { onSignOut: () => void }) {
         editing ? (
           <button onClick={handleSave} disabled={saving}
             className="flex items-center gap-1.5 text-xs font-bold text-white px-3 py-2 rounded-xl active:scale-95 transition-transform"
-            style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' }}>
+            style={{ background: 'linear-gradient(135deg, #3582B8 0%, #85B6D6 100%)' }}>
             {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
             {saving ? 'Menyimpan...' : 'Simpan'}
           </button>
@@ -507,12 +507,12 @@ function ProfileScreen({ onSignOut }: { onSignOut: () => void }) {
         )
       } />
       <div className="flex-1 overflow-y-auto pb-6">
-        <div className="relative h-32 overflow-hidden" style={{ background: 'linear-gradient(160deg, #1e40af 0%, #3b82f6 100%)' }} />
+        <div className="relative h-32 overflow-hidden" style={{ background: 'linear-gradient(160deg, #1F3A60 0%, #3582B8 100%)' }} />
         <div className="px-5 -mt-12 mb-6">
           <div className="bg-white rounded-3xl p-5 shadow-card">
             <div className="flex items-start gap-4">
               <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-white text-2xl font-bold flex-shrink-0"
-                style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' }}>
+                style={{ background: 'linear-gradient(135deg, #3582B8 0%, #85B6D6 100%)' }}>
                 {companyName[0]}
               </div>
               <div className="flex-1 min-w-0 pt-1">
@@ -693,7 +693,7 @@ function CsrSheet({ onClose, onSuccess }: CsrSheetProps) {
         <div className="px-5 py-4 border-t border-slate-100">
           <button onClick={handleSubmit} disabled={loading}
             className="w-full flex items-center justify-center gap-2 text-white font-bold py-4 rounded-2xl transition-all active:scale-95 disabled:opacity-60 shadow-lg"
-            style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' }}>
+            style={{ background: 'linear-gradient(135deg, #3582B8 0%, #85B6D6 100%)' }}>
             {loading ? <Loader2 size={18} className="animate-spin" /> : <HandHeart size={18} />}
             {loading ? 'Membuat...' : 'Buat Program CSR'}
           </button>
@@ -764,7 +764,7 @@ function InclusionAnalyticsScreen({ applications, jobs }: { applications: Applic
           </div>
           <div className="relative h-2 bg-slate-100 rounded-full overflow-hidden">
             <div className="absolute inset-y-0 left-0 rounded-full transition-all duration-500"
-              style={{ width: `${stats.inclusivityScore}%`, background: 'linear-gradient(90deg, #3b82f6, #06b6d4)' }} />
+              style={{ width: `${stats.inclusivityScore}%`, background: 'linear-gradient(90deg, #3582B8, #85B6D6)' }} />
           </div>
           <div className="flex items-center gap-2 mt-3">
             <Lightbulb size={14} className="text-amber-500" />
@@ -775,7 +775,7 @@ function InclusionAnalyticsScreen({ applications, jobs }: { applications: Applic
         {/* Key Metrics */}
         <div className="grid grid-cols-2 gap-3">
           {[
-            { label: 'Total Pelamar', value: stats.totalApps, icon: Users, color: '#3b82f6' },
+            { label: 'Total Pelamar', value: stats.totalApps, icon: Users, color: '#3582B8' },
             { label: 'Diterima', value: stats.accepted, icon: CheckCircle, color: '#059669' },
             { label: 'Disabilitas Diterima', value: stats.disabilityHired, icon: Heart, color: '#7c3aed' },
             { label: 'Rasio Inklusi', value: `${stats.disabilityRate}%`, icon: Target, color: '#d97706' },
@@ -797,7 +797,7 @@ function InclusionAnalyticsScreen({ applications, jobs }: { applications: Applic
           <h3 className="text-sm font-bold text-slate-700 mb-4">Funnel Rekrutmen</h3>
           <div className="space-y-2">
             {[
-              { label: 'Lamaran Masuk', count: stats.totalApps, color: '#3b82f6' },
+              { label: 'Lamaran Masuk', count: stats.totalApps, color: '#3582B8' },
               { label: 'Ditinjau', count: stats.totalApps - stats.pending, color: '#0ea5e9' },
               { label: 'Wawancara', count: stats.interview, color: '#7c3aed' },
               { label: 'Diterima', count: stats.accepted, color: '#059669' },
@@ -823,7 +823,7 @@ function InclusionAnalyticsScreen({ applications, jobs }: { applications: Applic
             <h3 className="text-sm font-bold text-slate-700 mb-3">Berdasarkan Jenis Disabilitas</h3>
             <div className="space-y-2">
               {disabilityBreakdown.map(([type, count], idx) => {
-                const colors = ['#3b82f6', '#7c3aed', '#059669', '#d97706', '#dc2626'];
+                const colors = ['#3582B8', '#7c3aed', '#059669', '#d97706', '#dc2626'];
                 const color = colors[idx % colors.length];
                 const pct = Math.round((count / stats.totalApps) * 100);
                 return (
@@ -851,9 +851,9 @@ function InclusionAnalyticsScreen({ applications, jobs }: { applications: Applic
                 return (
                   <div key={month} className="flex-1 flex flex-col items-center gap-1">
                     <div className="relative w-full flex flex-col justify-end" style={{ height: 60 }}>
-                      <div className="w-full rounded-t-md" style={{ height: `${height}%`, background: 'linear-gradient(180deg, #3b82f6, #1d4ed8)' }}>
+                      <div className="w-full rounded-t-md" style={{ height: `${height}%`, background: 'linear-gradient(180deg, #3582B8, #1d4ed8)' }}>
                         {data.disability > 0 && (
-                          <div className="absolute bottom-0 left-0 right-0 rounded-t-md" style={{ height: `${(data.disability / data.total) * 100}%`, background: 'linear-gradient(180deg, #06b6d4, #0891b2)' }} />
+                          <div className="absolute bottom-0 left-0 right-0 rounded-t-md" style={{ height: `${(data.disability / data.total) * 100}%`, background: 'linear-gradient(180deg, #85B6D6, #0891b2)' }} />
                         )}
                       </div>
                     </div>
@@ -904,7 +904,7 @@ function CsrTrackingScreen({ programs, onAddProgram }: { programs: CsrProgram[];
     <div className="flex-1 flex flex-col overflow-hidden">
       <ScreenHeader title="CSR Tracking" subtitle="Kelola program CSR" right={
         <button onClick={onAddProgram} className="flex items-center gap-1.5 text-xs font-bold text-white px-3 py-2 rounded-xl active:scale-95 transition-transform"
-          style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' }}>
+          style={{ background: 'linear-gradient(135deg, #3582B8 0%, #85B6D6 100%)' }}>
           <Plus size={14} /> Tambah
         </button>
       } />
@@ -912,7 +912,7 @@ function CsrTrackingScreen({ programs, onAddProgram }: { programs: CsrProgram[];
         {/* Summary Cards */}
         <div className="grid grid-cols-3 gap-2">
           {[
-            { label: 'Total Anggaran', value: formatMoney(totalBudget), icon: Wallet, color: '#3b82f6' },
+            { label: 'Total Anggaran', value: formatMoney(totalBudget), icon: Wallet, color: '#3582B8' },
             { label: 'Terpakai', value: formatMoney(totalSpent), icon: HandHeart, color: '#059669' },
             { label: 'Beneficiary', value: totalBeneficiaries, icon: Users, color: '#7c3aed' },
           ].map(({ label, value, icon: Icon, color }) => (
@@ -933,7 +933,7 @@ function CsrTrackingScreen({ programs, onAddProgram }: { programs: CsrProgram[];
             <p className="text-slate-500 font-semibold">Belum ada program CSR</p>
             <p className="text-xs text-slate-400 mt-1">Mulai program untuk mendukung komunitas disabilitas</p>
             <button onClick={onAddProgram} className="mt-4 flex items-center gap-2 mx-auto text-sm font-bold text-white px-5 py-2.5 rounded-2xl active:scale-95 transition-transform"
-              style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' }}>
+              style={{ background: 'linear-gradient(135deg, #3582B8 0%, #85B6D6 100%)' }}>
               <Plus size={16} /> Buat Program
             </button>
           </div>
@@ -1196,7 +1196,7 @@ export default function EmployerApp({ activeTab, onTabChange, postJobTrigger, on
     return (
       <div className="flex-1 flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
-          <div className="w-12 h-12 rounded-2xl animate-pulse" style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' }} />
+          <div className="w-12 h-12 rounded-2xl animate-pulse" style={{ background: 'linear-gradient(135deg, #3582B8 0%, #85B6D6 100%)' }} />
           <div className="flex gap-1">
             {[0,1,2].map(i => <div key={i} className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-bounce" style={{ animationDelay: `${i*150}ms` }} />)}
           </div>

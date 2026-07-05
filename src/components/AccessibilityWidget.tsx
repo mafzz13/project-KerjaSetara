@@ -23,7 +23,7 @@ export default function AccessibilityWidget() {
       {open && (
         <div className="bg-white rounded-2xl shadow-modal border border-slate-100 w-72 animate-slide-up overflow-hidden">
           {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100" style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' }}>
+          <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100" style={{ background: 'linear-gradient(135deg, #3582B8 0%, #06b6d4 100%)' }}>
             <div className="flex items-center gap-2">
               <Accessibility size={16} className="text-white" />
               <span className="text-sm font-semibold text-white">Pengaturan Aksesibilitas</span>
@@ -127,7 +127,7 @@ export default function AccessibilityWidget() {
       <button
         onClick={() => setOpen(!open)}
         className="w-14 h-14 rounded-2xl text-white shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 flex items-center justify-center group"
-        style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' }}
+        style={{ background: 'linear-gradient(135deg, #3582B8 0%, #06b6d4 100%)' }}
         aria-label="Buka pengaturan aksesibilitas"
         title="Aksesibilitas"
       >
