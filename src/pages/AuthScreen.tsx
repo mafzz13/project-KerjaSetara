@@ -236,21 +236,14 @@ export default function AuthScreen({ onSuccess, onBack }: AuthScreenProps) {
     return (
       <div className="app-screen flex flex-col overflow-y-auto" style={{ background: C.bg }}>
         {/* Hero Section */}
-        <div className="relative flex-shrink-0 overflow-hidden"
-          style={{ background: `linear-gradient(180deg, ${C.lightBlue} 0%, #c8e3f0 60%, #e8f4fa 100%)`, paddingTop: 'env(safe-area-inset-top)' }}>
-          {/* Clouds */}
-          <div className="absolute top-6 left-8 w-20 h-8 bg-white/60 rounded-full blur-sm" />
-          <div className="absolute top-10 right-10 w-14 h-6 bg-white/50 rounded-full blur-sm" />
-          <div className="absolute top-4 left-1/2 -translate-x-1/2 w-24 h-7 bg-white/40 rounded-full blur-sm" />
-
-          {/* Branding */}
-          <div className="relative z-10 flex flex-col items-center pt-8 pb-2">
+        <div className="relative flex-shrink-0 overflow-hidden flex flex-col items-center justify-center"
+          style={{ background: 'linear-gradient(160deg, #1F3A60 0%, #3582B8 55%, #85B6D6 100%)', minHeight: 280, paddingTop: 'env(safe-area-inset-top)' }}>
+          <div className="absolute inset-0 opacity-10"
+            style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(255,255,255,0.4) 1px, transparent 0)', backgroundSize: '28px 28px' }} />
+          <div className="relative z-10 animate-fade-in">
             <Logo size="xl" className="mx-auto" transparent wordmarkScale={1.6} />
-            <p className="text-xs font-medium mt-2" style={{ color: C.navy }}>Empowering Abilities, Connecting Opportunities</p>
+            <p className="text-xs font-medium mt-3 text-center text-white/80">Empowering Abilities, Connecting Opportunities</p>
           </div>
-
-          {/* Illustration */}
-          <HeroIllustration />
         </div>
 
         {/* Form Card */}
