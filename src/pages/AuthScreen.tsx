@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { Eye, EyeOff, Briefcase, Building2, Loader2, AlertCircle, Mic, Volume2, VolumeX, Fingerprint, Shield, CheckCircle, Lock, Mail, MapPin } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useAccessibility } from '../contexts/AccessibilityContext';
+import Logo from '../components/Logo';
 
 /* ─── BRAND COLORS ─── */
 const C = {
@@ -244,15 +245,8 @@ export default function AuthScreen({ onSuccess, onBack }: AuthScreenProps) {
 
           {/* Branding */}
           <div className="relative z-10 flex flex-col items-center pt-8 pb-2">
-            <div className="flex items-center gap-2 mb-1">
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center shadow-md" style={{ background: `linear-gradient(135deg, ${C.navy}, ${C.blue})` }}>
-                <span className="text-white font-black text-lg">K</span>
-              </div>
-              <div>
-                <p className="font-black text-xl leading-tight" style={{ color: C.navy }}>KerjaSetara</p>
-                <p className="text-[9px] font-medium leading-tight" style={{ color: C.blue }}>Empowering Abilities, Connecting Opportunities</p>
-              </div>
-            </div>
+            <Logo size="xl" className="mx-auto" transparent wordmarkScale={1.6} />
+            <p className="text-xs font-medium mt-2" style={{ color: C.navy }}>Empowering Abilities, Connecting Opportunities</p>
           </div>
 
           {/* Illustration */}
