@@ -114,7 +114,7 @@ function ApplySheet({ job, onClose, onSuccess }: { job: Job; onClose: () => void
           className="w-full px-4 py-3 text-sm rounded-2xl border border-slate-200 bg-slate-50 outline-none focus:border-blue-400 focus:bg-white resize-none transition-all" />
         <button onClick={handleApply} disabled={loading}
           className="w-full flex items-center justify-center gap-2 text-white font-bold py-4 rounded-2xl active:scale-95 disabled:opacity-60"
-          style={{ background: 'linear-gradient(135deg, #3582B8 0%, #85B6D6 100%)' }}>
+          style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' }}>
           {loading ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} />}
           {loading ? 'Mengirim...' : 'Kirim Lamaran'}
         </button>
@@ -131,7 +131,7 @@ function JobDetailSheet({ job, applied, matchScore, onClose, onApply }: { job: J
         <div className="overflow-y-auto flex-1 px-5 pb-4 space-y-4">
           <div className="flex items-start gap-3">
             <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-white font-bold text-lg flex-shrink-0"
-              style={{ background: 'linear-gradient(135deg, #3582B8 0%, #85B6D6 100%)' }}>{job.company_name[0]}</div>
+              style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' }}>{job.company_name[0]}</div>
             <div className="flex-1">
               <h3 className="font-bold text-slate-900 text-lg leading-tight">{job.title}</h3>
               <p className="text-sm text-slate-500">{job.company_name}</p>
@@ -161,7 +161,7 @@ function JobDetailSheet({ job, applied, matchScore, onClose, onApply }: { job: J
             </div>
           ) : (
             <button onClick={onApply} className="w-full flex items-center justify-center gap-2 text-white font-bold py-4 rounded-2xl active:scale-95"
-              style={{ background: 'linear-gradient(135deg, #3582B8 0%, #85B6D6 100%)' }}>
+              style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' }}>
               <Send size={18} /> Lamar Sekarang
             </button>
           )}
@@ -193,7 +193,7 @@ function HomeScreen({ jobs, applications, enrollments, gamification, onJobPress,
     <div className="flex-1 overflow-y-auto">
       {/* Header */}
       <div className="relative px-5 pt-12 pb-6 overflow-hidden"
-        style={{ background: 'linear-gradient(160deg, #1F3A60 0%, #3582B8 85%, #0ea5e9 100%)' }}>
+        style={{ background: 'linear-gradient(160deg, #1e40af 0%, #3b82f6 85%, #0ea5e9 100%)' }}>
         <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(255,255,255,0.4) 1px, transparent 0)', backgroundSize: '28px 28px' }} />
 
         <div className="relative z-10 flex items-start gap-4 mb-5">
@@ -263,7 +263,7 @@ function HomeScreen({ jobs, applications, enrollments, gamification, onJobPress,
           <h2 className="text-sm font-bold text-slate-700 mb-3">Statistik Saya</h2>
           <div className="grid grid-cols-3 gap-3">
             {[
-              { label: 'Lamaran\nTerkirim', value: applications.length, color: '#3582B8', bg: '#eff6ff', icon: Send },
+              { label: 'Lamaran\nTerkirim', value: applications.length, color: '#3b82f6', bg: '#eff6ff', icon: Send },
               { label: 'Kursus\nSelesai', value: completedEnrollments, color: '#d97706', bg: '#fffbeb', icon: Award },
               { label: 'Sertifikat\nDiraih', value: dbBadges.length, color: '#059669', bg: '#f0fdf4', icon: Trophy },
             ].map(s => (
@@ -283,7 +283,7 @@ function HomeScreen({ jobs, applications, enrollments, gamification, onJobPress,
           <h2 className="text-sm font-bold text-slate-700 mb-3">Assistive Tools</h2>
           <div className="bg-white rounded-2xl shadow-card border border-slate-50 overflow-hidden">
             {[
-              { icon: Volume2, label: 'AI Voice Reader', desc: 'Bacakan konten halaman', action: () => speak('AI Voice Reader aktif. Saya akan membacakan konten untuk kamu.', true), color: '#3582B8' },
+              { icon: Volume2, label: 'AI Voice Reader', desc: 'Bacakan konten halaman', action: () => speak('AI Voice Reader aktif. Saya akan membacakan konten untuk kamu.', true), color: '#3b82f6' },
               { icon: Mic, label: 'Voice Command', desc: 'Navigasi dengan suara', action: () => speak('Mode perintah suara siap.', true), color: '#7c3aed' },
               { icon: Keyboard, label: 'Keyboard Aksesibilitas', desc: 'Navigasi keyboard penuh', action: () => speak('Keyboard aksesibilitas aktif.', true), color: '#059669' },
             ].map(({ icon: Icon, label, desc, action, color }, i) => (
@@ -318,7 +318,7 @@ function HomeScreen({ jobs, applications, enrollments, gamification, onJobPress,
                   <div key={job.id} className={`flex items-center gap-3 px-4 py-3.5 ${i < topJobs.length - 1 ? 'border-b border-slate-100' : ''}`}>
                     <button onClick={() => onJobPress(job)} className="flex items-center gap-3 flex-1 min-w-0 text-left">
                       <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm flex-shrink-0"
-                        style={{ background: 'linear-gradient(135deg, #3582B8 0%, #85B6D6 100%)' }}>{job.company_name[0]}</div>
+                        style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' }}>{job.company_name[0]}</div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-bold text-slate-900 truncate">{job.title}</p>
                         <p className="text-xs text-slate-500 truncate">{job.company_name} · {job.location}</p>
@@ -335,7 +335,7 @@ function HomeScreen({ jobs, applications, enrollments, gamification, onJobPress,
                     ) : (
                       <button onClick={() => onApply(job)}
                         className="flex-shrink-0 text-xs font-bold text-white px-3 py-2 rounded-xl active:scale-95 transition-transform"
-                        style={{ background: 'linear-gradient(135deg, #3582B8, #85B6D6)' }}>
+                        style={{ background: 'linear-gradient(135deg, #3b82f6, #06b6d4)' }}>
                         Lamar
                       </button>
                     )}
@@ -361,12 +361,12 @@ function HomeScreen({ jobs, applications, enrollments, gamification, onJobPress,
                   <button key={e.id} onClick={() => onTabChange('training')}
                     className="flex-shrink-0 w-44 bg-white rounded-2xl p-3.5 shadow-card border border-slate-50 text-left active:scale-[0.98] transition-transform">
                     <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-2 text-white font-bold text-sm"
-                      style={{ background: 'linear-gradient(135deg, #3582B8, #85B6D6)' }}>
+                      style={{ background: 'linear-gradient(135deg, #3b82f6, #06b6d4)' }}>
                       {mod.title[0]}
                     </div>
                     <p className="text-xs font-bold text-slate-800 leading-tight mb-2 line-clamp-2">{mod.title}</p>
                     <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                      <div className="h-full rounded-full" style={{ width: `${e.progress}%`, background: 'linear-gradient(90deg, #3582B8, #85B6D6)' }} />
+                      <div className="h-full rounded-full" style={{ width: `${e.progress}%`, background: 'linear-gradient(90deg, #3b82f6, #06b6d4)' }} />
                     </div>
                     <p className="text-[10px] text-slate-400 mt-1">{e.progress}% selesai</p>
                   </button>
@@ -433,13 +433,13 @@ function JobsScreen({ jobs, applications, onJobPress }: { jobs: Job[]; applicati
           <div className="flex gap-2 overflow-x-auto flex-1 pb-0.5" style={{ scrollbarWidth: 'none' }}>
             <button onClick={() => setSelectedTag('')}
               className={`flex-shrink-0 text-xs font-semibold px-3 py-1.5 rounded-full transition-all ${!selectedTag ? 'text-white' : 'bg-slate-100 text-slate-600'}`}
-              style={!selectedTag ? { background: 'linear-gradient(135deg, #3582B8, #85B6D6)' } : {}}>
+              style={!selectedTag ? { background: 'linear-gradient(135deg, #3b82f6, #06b6d4)' } : {}}>
               Semua
             </button>
             {allTags.map(t => (
               <button key={t} onClick={() => setSelectedTag(selectedTag === t ? '' : t)}
                 className={`flex-shrink-0 text-xs font-semibold px-3 py-1.5 rounded-full transition-all ${selectedTag === t ? 'text-white' : 'bg-slate-100 text-slate-600'}`}
-                style={selectedTag === t ? { background: 'linear-gradient(135deg, #3582B8, #85B6D6)' } : {}}>
+                style={selectedTag === t ? { background: 'linear-gradient(135deg, #3b82f6, #06b6d4)' } : {}}>
                 {t}
               </button>
             ))}
@@ -464,7 +464,7 @@ function JobsScreen({ jobs, applications, onJobPress }: { jobs: Job[]; applicati
               className="w-full bg-white rounded-2xl p-4 shadow-card text-left active:scale-[0.98] transition-transform border border-slate-50">
               <div className="flex items-start gap-3">
                 <div className="w-11 h-11 rounded-2xl flex items-center justify-center text-white font-bold flex-shrink-0"
-                  style={{ background: 'linear-gradient(135deg, #3582B8 0%, #85B6D6 100%)' }}>{job.company_name[0]}</div>
+                  style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' }}>{job.company_name[0]}</div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between gap-2">
                     <h3 className="font-bold text-slate-900 text-sm leading-tight">{job.title}</h3>
@@ -553,7 +553,7 @@ function TrainingScreen({ modules, enrollments, gamification, challenges, comple
                         <span className="text-xs font-bold text-blue-700">{e.progress}%</span>
                       </div>
                       <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
-                        <div className="h-full rounded-full" style={{ width: `${e.progress}%`, background: 'linear-gradient(90deg, #3582B8, #85B6D6)' }} />
+                        <div className="h-full rounded-full" style={{ width: `${e.progress}%`, background: 'linear-gradient(90deg, #3b82f6, #06b6d4)' }} />
                       </div>
                     </div>
                   );
@@ -589,7 +589,7 @@ function TrainingScreen({ modules, enrollments, gamification, challenges, comple
                       ) : (
                         <button onClick={() => onEnroll(mod.id)}
                           className="text-[11px] font-bold text-white px-3 py-1.5 rounded-full active:scale-95 transition-transform"
-                          style={{ background: 'linear-gradient(135deg, #3582B8, #85B6D6)' }}>
+                          style={{ background: 'linear-gradient(135deg, #3b82f6, #06b6d4)' }}>
                           Daftar +{mod.duration_hours * 5} XP
                         </button>
                       )}
@@ -646,7 +646,7 @@ function TrainingScreen({ modules, enrollments, gamification, challenges, comple
                         {!done && (
                           <button onClick={() => onCompleteChallenge(ch.id, ch.xp_reward, ch.coin_reward)}
                             className="text-[11px] font-bold text-white px-3 py-1.5 rounded-xl active:scale-95"
-                            style={{ background: 'linear-gradient(135deg, #3582B8, #85B6D6)' }}>
+                            style={{ background: 'linear-gradient(135deg, #3b82f6, #06b6d4)' }}>
                             Selesaikan
                           </button>
                         )}
@@ -681,7 +681,7 @@ function TrainingScreen({ modules, enrollments, gamification, challenges, comple
                     {medal ? <span className="text-xl">{medal}</span> : <span className="text-sm font-bold text-slate-400">#{i + 1}</span>}
                   </div>
                   <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold flex-shrink-0"
-                    style={{ background: 'linear-gradient(135deg, #3582B8, #85B6D6)' }}>
+                    style={{ background: 'linear-gradient(135deg, #3b82f6, #06b6d4)' }}>
                     {name[0]}
                   </div>
                   <div className="flex-1 min-w-0">
@@ -740,7 +740,7 @@ function MarketplaceScreen({ listings, myListings, onAddListing }: {
         right={
           <button onClick={() => setShowAdd(true)}
             className="w-9 h-9 rounded-xl flex items-center justify-center text-white active:scale-95 transition-transform"
-            style={{ background: 'linear-gradient(135deg, #3582B8, #85B6D6)' }}>
+            style={{ background: 'linear-gradient(135deg, #3b82f6, #06b6d4)' }}>
             <Plus size={18} />
           </button>
         }
@@ -763,7 +763,7 @@ function MarketplaceScreen({ listings, myListings, onAddListing }: {
             {tab === 'mine' && (
               <button onClick={() => setShowAdd(true)}
                 className="mt-4 flex items-center gap-2 text-sm font-bold text-white px-5 py-2.5 rounded-2xl active:scale-95"
-                style={{ background: 'linear-gradient(135deg, #3582B8 0%, #85B6D6 100%)' }}>
+                style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' }}>
                 <Plus size={16} /> Tambah Listing
               </button>
             )}
@@ -853,7 +853,7 @@ function MarketplaceScreen({ listings, myListings, onAddListing }: {
             <div className="px-5 py-4 border-t border-slate-100">
               <button onClick={handleAdd} disabled={loading || !form.title || !form.description}
                 className="w-full flex items-center justify-center gap-2 text-white font-bold py-4 rounded-2xl active:scale-95 disabled:opacity-60"
-                style={{ background: 'linear-gradient(135deg, #3582B8 0%, #85B6D6 100%)' }}>
+                style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' }}>
                 {loading ? <Loader2 size={18} className="animate-spin" /> : <Plus size={18} />}
                 {loading ? 'Menyimpan...' : 'Publikasikan Layanan'}
               </button>
@@ -940,7 +940,7 @@ function ProfileScreen({ gamification, onSignOut }: { gamification: UserGamifica
         right={activeSection === 'view' ? (
           <button onClick={() => setActiveSection('edit-info')}
             className="flex items-center gap-1.5 text-xs font-bold text-white px-3 py-2 rounded-xl active:scale-95 transition-transform"
-            style={{ background: 'linear-gradient(135deg, #3582B8 0%, #85B6D6 100%)' }}>
+            style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' }}>
             <Pencil size={14} /> Edit Profil
           </button>
         ) : saving ? (
@@ -949,7 +949,7 @@ function ProfileScreen({ gamification, onSignOut }: { gamification: UserGamifica
       />
       <div className="flex-1 overflow-y-auto pb-6">
         {/* Banner */}
-        <div className="relative h-28 overflow-hidden" style={{ background: 'linear-gradient(160deg, #1F3A60 0%, #3582B8 100%)' }}>
+        <div className="relative h-28 overflow-hidden" style={{ background: 'linear-gradient(160deg, #1e40af 0%, #3b82f6 100%)' }}>
           <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(255,255,255,0.4) 1px, transparent 0)', backgroundSize: '24px 24px' }} />
         </div>
 
@@ -959,7 +959,7 @@ function ProfileScreen({ gamification, onSignOut }: { gamification: UserGamifica
             <div className="flex items-start gap-4">
               <div className="relative flex-shrink-0">
                 <div className="w-20 h-20 rounded-2xl flex items-center justify-center text-white text-3xl font-bold border-4 border-white shadow-md"
-                  style={{ background: 'linear-gradient(135deg, #3582B8 0%, #85B6D6 100%)' }}>
+                  style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' }}>
                   {profile?.full_name?.[0]?.toUpperCase() || 'U'}
                 </div>
                 {gamification && (
@@ -1060,7 +1060,7 @@ function ProfileScreen({ gamification, onSignOut }: { gamification: UserGamifica
                 <button onClick={() => handleSave({ full_name: form.full_name, job_title: form.job_title, disability_type: form.disability_type, location: form.location, phone: form.phone, available_for_work: form.available_for_work })}
                   disabled={saving}
                   className="flex-1 py-3 text-sm font-bold text-white rounded-xl active:scale-95 transition-transform flex items-center justify-center gap-2"
-                  style={{ background: 'linear-gradient(135deg, #3582B8 0%, #85B6D6 100%)' }}>
+                  style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' }}>
                   {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />} Simpan
                 </button>
               </div>
@@ -1098,10 +1098,10 @@ function ProfileScreen({ gamification, onSignOut }: { gamification: UserGamifica
                     <div key={i}>
                       <div className="flex items-center justify-between mb-1">
                         <span className="text-xs font-bold text-slate-700">{skill.name}</span>
-                        <span className="text-xs font-bold" style={{ color: '#3582B8' }}>{skill.level}%</span>
+                        <span className="text-xs font-bold" style={{ color: '#3b82f6' }}>{skill.level}%</span>
                       </div>
                       <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
-                        <div className="h-full rounded-full transition-all" style={{ width: `${skill.level}%`, background: 'linear-gradient(90deg, #3582B8, #85B6D6)' }} />
+                        <div className="h-full rounded-full transition-all" style={{ width: `${skill.level}%`, background: 'linear-gradient(90deg, #3b82f6, #06b6d4)' }} />
                       </div>
                     </div>
                   ))}
@@ -1194,7 +1194,7 @@ function ProfileScreen({ gamification, onSignOut }: { gamification: UserGamifica
                 <button onClick={() => setActiveSection('view')} className="flex-1 py-3 text-sm font-medium text-slate-500 bg-slate-100 rounded-xl">Batal</button>
                 <button onClick={() => handleSave({ bio: form.bio })} disabled={saving}
                   className="flex-1 py-3 text-sm font-bold text-white rounded-xl flex items-center justify-center gap-2"
-                  style={{ background: 'linear-gradient(135deg, #3582B8 0%, #85B6D6 100%)' }}>
+                  style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' }}>
                   {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />} Simpan
                 </button>
               </div>
@@ -1231,7 +1231,7 @@ function ProfileScreen({ gamification, onSignOut }: { gamification: UserGamifica
                   <input type="number" min={10} max={100} value={newSkill.level}
                     onChange={e => setNewSkill(s => ({ ...s, level: Math.min(100, Math.max(10, +e.target.value)) }))}
                     className="w-16 px-2 py-2 text-sm rounded-xl border border-slate-200 bg-slate-50 outline-none text-center focus:border-blue-400" />
-                  <button onClick={addSkill} className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: 'linear-gradient(135deg, #3582B8, #85B6D6)' }}>
+                  <button onClick={addSkill} className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: 'linear-gradient(135deg, #3b82f6, #06b6d4)' }}>
                     <PlusCircle size={16} className="text-white" />
                   </button>
                 </div>
@@ -1240,7 +1240,7 @@ function ProfileScreen({ gamification, onSignOut }: { gamification: UserGamifica
                 <button onClick={() => setActiveSection('view')} className="flex-1 py-3 text-sm font-medium text-slate-500 bg-slate-100 rounded-xl">Batal</button>
                 <button onClick={() => handleSave({ skills: form.skills })} disabled={saving}
                   className="flex-1 py-3 text-sm font-bold text-white rounded-xl flex items-center justify-center gap-2"
-                  style={{ background: 'linear-gradient(135deg, #3582B8 0%, #85B6D6 100%)' }}>
+                  style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' }}>
                   {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />} Simpan
                 </button>
               </div>
@@ -1273,7 +1273,7 @@ function ProfileScreen({ gamification, onSignOut }: { gamification: UserGamifica
                 <input value={newWork.description} onChange={e => setNewWork(w => ({ ...w, description: e.target.value }))} placeholder="Deskripsi singkat" className={inputCls} />
                 <button onClick={addWork}
                   className="w-full py-2.5 text-sm font-bold text-white rounded-xl flex items-center justify-center gap-2"
-                  style={{ background: 'linear-gradient(135deg, #3582B8, #85B6D6)' }}>
+                  style={{ background: 'linear-gradient(135deg, #3b82f6, #06b6d4)' }}>
                   <PlusCircle size={15} /> Tambah
                 </button>
               </div>
@@ -1281,7 +1281,7 @@ function ProfileScreen({ gamification, onSignOut }: { gamification: UserGamifica
                 <button onClick={() => setActiveSection('view')} className="flex-1 py-3 text-sm font-medium text-slate-500 bg-slate-100 rounded-xl">Batal</button>
                 <button onClick={() => handleSave({ work_experience: form.work_experience })} disabled={saving}
                   className="flex-1 py-3 text-sm font-bold text-white rounded-xl flex items-center justify-center gap-2"
-                  style={{ background: 'linear-gradient(135deg, #3582B8 0%, #85B6D6 100%)' }}>
+                  style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' }}>
                   {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />} Simpan
                 </button>
               </div>
@@ -1378,7 +1378,7 @@ export default function JobSeekerApp({ activeTab, onTabChange, onSignOut }: {
     return (
       <div className="flex-1 flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
-          <div className="w-12 h-12 rounded-2xl animate-pulse" style={{ background: 'linear-gradient(135deg, #3582B8 0%, #85B6D6 100%)' }} />
+          <div className="w-12 h-12 rounded-2xl animate-pulse" style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' }} />
           <div className="flex gap-1">
             {[0,1,2].map(i => <div key={i} className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-bounce" style={{ animationDelay: `${i*150}ms` }} />)}
           </div>

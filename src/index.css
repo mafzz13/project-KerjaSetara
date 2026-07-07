@@ -23,7 +23,7 @@
   html.high-contrast { filter: contrast(1.5) brightness(0.95); }
 
   * { box-sizing: border-box; }
-  ::selection { background-color: #3582B8; color: #fff; }
+  ::selection { background-color: #1565c0; color: #fff; }
 
   /* App scrollbar */
   ::-webkit-scrollbar { width: 0; height: 0; }
