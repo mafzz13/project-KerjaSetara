@@ -6,7 +6,7 @@ import {
   BarChart3, PieChart, Activity, Target, Heart, Accessibility,
   Check, AlertTriangle, Wallet, HandHeart, Settings, Shield,
   Lightbulb, Smile, Frown, Meh, Star, Calendar, BookOpen, Building2,
-  Pencil, Save, Mail
+  Pencil, Save, Mail, Award
 } from 'lucide-react';
 import ScreenHeader from '../components/ScreenHeader';
 import { supabase, Job, Application, CsrProgram } from '../lib/supabase';
